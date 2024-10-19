@@ -1,0 +1,41 @@
+name: sensorize
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.2 <4.0.0'
+
+dependencies:
+  cupertino_icons: ^1.0.2
+  flutter:
+    sdk: flutter
+  flutter_dotenv: ^5.2.1
+  flutter_secure_storage: ^4.2.1
+  fluttertoast: ^8.2.8
+  get_it: ^7.7.0
+  injectable: ^2.4.2
+  isar: ^3.1.0+1
+  path_provider: ^2.1.4
+  provider: ^6.1.2
+  supabase_flutter: ^2.8.0
+
+dev_dependencies:
+  build_runner: ^2.4.7
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+  injectable_generator: ^2.4.2
+  isar_generator: ^3.1.0+1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - lib/config/config.env
+    - assets/
+    - assets/resources/
+    - assets/icon/
+
+
+
