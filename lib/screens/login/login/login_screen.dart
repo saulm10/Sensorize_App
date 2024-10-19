@@ -33,7 +33,7 @@ class _LoginScreen extends StatelessWidget {
         child: Center(
           child: IconButton(
             onPressed: () {
-              loginProvider.login();
+              loginProvider.onLoginTap();
             },
             icon: const Text(
               'Login',

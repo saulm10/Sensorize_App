@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
-import 'package:sensorize/config/di_config.config.dart';
+import 'package:sensorize/config/di_config/di_config.config.dart';
 
 class Injector {
   static final GetIt _locator = GetIt.I;

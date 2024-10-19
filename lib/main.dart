@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:sensorize/config/di_config.dart';
+import 'package:sensorize/config/di_config/di_config.dart';
+import 'package:sensorize/config/env/env.dart';
 import 'package:sensorize/services/services.dart';
 
 import 'screens/screens.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(
-      fileName:
-          "lib/config/config.env"); //TODO: Hacer un config para este tipo de docs
+  await setupEnv();
   await setupDI();
-
   runApp(const SensorizeMain());
 }
 

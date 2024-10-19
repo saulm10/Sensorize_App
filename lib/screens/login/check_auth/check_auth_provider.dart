@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sensorize/api/api_repository.dart';
-import 'package:sensorize/config/di_config.dart';
+import 'package:sensorize/config/di_config/di_config.dart';
 import 'package:sensorize/screens/screens.dart';
 import 'package:sensorize/services/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

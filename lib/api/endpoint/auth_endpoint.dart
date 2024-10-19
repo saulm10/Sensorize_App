@@ -1,4 +1,5 @@
 import 'package:sensorize/api/api_repository.dart';
+import 'package:sensorize/config/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 mixin AuthEndpoint implements ApiDependencies {
@@ -11,8 +12,8 @@ mixin AuthEndpoint implements ApiDependencies {
 
   Future<AuthResponse?> signUpAuto() async {
     return await supabaseService.signUpWithEmail(
-      await storage.read('login'),
-      await storage.read('password'),
+      await storage.read(Constants.login),
+      await storage.read(Constants.password),
     );
   }
 
