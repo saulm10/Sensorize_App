@@ -8,12 +8,17 @@ class ApiRepository
     implements ApiDependencies {
   final SecureStorajeService _storage;
 
+  final LocalDbService _localDbService;
+
   final SupabaseService _supabaseService;
 
   final ToastService _toastService;
 
   @override
   SecureStorajeService get storage => _storage;
+
+  @override
+  LocalDbService get localDbService => _localDbService;
 
   @override
   SupabaseService get supabaseService => _supabaseService;
@@ -25,6 +30,7 @@ class ApiRepository
     this._storage,
     this._supabaseService,
     this._toastService,
+    this._localDbService,
   );
 }
 
@@ -32,4 +38,5 @@ abstract class ApiDependencies {
   SecureStorajeService get storage;
   SupabaseService get supabaseService;
   ToastService get toastService;
+  LocalDbService get localDbService;
 }

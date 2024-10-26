@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sensorize/database/tables/aa_tables.dart';
+import 'package:sensorize/extensions/build_context_ex.dart';
 import 'package:sensorize/widgets/silo_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -37,21 +38,21 @@ class _Tap1Body extends StatelessWidget {
             children: [
               // PageView que muestra los silos
               Positioned(
-                top: 80,
+                top: 70,
                 left: 20,
                 right: 20,
                 bottom: 90,
-                child: PageView(
+                child: PageView.builder(
                   controller: tap1provider.pageController,
                   scrollDirection: Axis.horizontal,
                   physics: const NeverScrollableScrollPhysics(),
-                  children: tap1provider.silos.map((silo) {
+                  itemBuilder: (context, index) {
                     return Silowidget(
-                      height: 450,
+                      height: 420,
                       width: 270,
-                      nivel: silo!.volumen.toDouble(),
+                      nivel: snapshot.data![index].volumen.toDouble(),
                     );
-                  }).toList(),
+                  },
                 ),
               ),
 
@@ -59,12 +60,16 @@ class _Tap1Body extends StatelessWidget {
               Positioned(
                 left: 10,
                 child: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_back_ios_new_rounded,
                     size: 40,
-                    color: Colors.black,
+                    color: tap1provider.currentIndex > 0
+                        ? Colors.black
+                        : Colors.grey,
                   ),
-                  onPressed: () => tap1provider.onArrowTapLeft(),
+                  onPressed: tap1provider.currentIndex > 0
+                      ? () => tap1provider.onArrowTapLeft()
+                      : null,
                 ),
               ),
 
@@ -72,12 +77,17 @@ class _Tap1Body extends StatelessWidget {
               Positioned(
                 right: 10,
                 child: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_forward_ios_rounded,
                     size: 40,
-                    color: Colors.black,
+                    color: tap1provider.currentIndex + 1 < snapshot.data!.length
+                        ? Colors.black
+                        : Colors.grey,
                   ),
-                  onPressed: () => tap1provider.onArrowTapRight(),
+                  onPressed:
+                      tap1provider.currentIndex + 1 < snapshot.data!.length
+                          ? () => tap1provider.onArrowTapRight()
+                          : null,
                 ),
               ),
 
@@ -86,10 +96,10 @@ class _Tap1Body extends StatelessWidget {
                 top: 0,
                 child: TweenAnimationBuilder(
                   tween: Tween<double>(
-                    begin: tap1provider.beginVolumn(),
-                    end: tap1provider.endVolumn(),
+                    begin: tap1provider.beginVolumn(snapshot.data!),
+                    end: tap1provider.endVolumn(snapshot.data!),
                   ),
-                  duration: const Duration(seconds: 1),
+                  duration: const Duration(milliseconds: 270),
                   builder: (context, value, child) {
                     return Text(
                       value.toStringAsFixed(0),
@@ -97,6 +107,7 @@ class _Tap1Body extends StatelessWidget {
                         fontSize: 105,
                         fontWeight: FontWeight.w800,
                         letterSpacing: -5,
+                        height: 0,
                       ),
                     );
                   },
@@ -105,16 +116,57 @@ class _Tap1Body extends StatelessWidget {
 
               //Page indicator
               Positioned(
-                  bottom: 70,
-                  child: SmoothPageIndicator(
-                    controller: tap1provider.pageController,
-                    count: tap1provider.silos.length,
-                    effect: const WormEffect(),
-                  ))
+                bottom: 100,
+                child: SmoothPageIndicator(
+                  controller: tap1provider.pageController,
+                  count: snapshot.data!.length,
+                  effect: WormEffect(
+                    activeDotColor: context.theme.colorScheme.primary,
+                    spacing: 20,
+                  ),
+                ),
+              ),
+
+              //Texto detalle silo
+              Positioned(
+                bottom: 50,
+                child: Row(
+                  children: [
+                    Text(
+                      snapshot.data![tap1provider.currentIndex].nombre,
+                      style: const TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.info_outline_rounded,
+                        size: 30,
+                        grade: 30,
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ],
           );
         } else {
-          return const Center(child: Text('No hay data'));
+          return Center(
+              child: Column(
+            children: [
+              const Text('No hay data, pulsa para recargar:'),
+              IconButton(
+                onPressed: () => tap1provider.refreshSilos(),
+                icon: const Icon(
+                  Icons.refresh,
+                  size: 50,
+                  color: Colors.black,
+                ),
+              )
+            ],
+          ));
         }
       },
     );

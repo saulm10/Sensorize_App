@@ -36,9 +36,12 @@ class _HomeScreen extends StatelessWidget {
           actions: [
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
-              child: const CircleAvatar(
-                maxRadius: 25,
-                child: Text('CS'),
+              child: GestureDetector(
+                onTap: () => homeProvider.navigateToProfile(),
+                child: const CircleAvatar(
+                  maxRadius: 25,
+                  child: Text('CS'),
+                ),
               ),
             )
           ],
@@ -83,7 +86,7 @@ class _HomeScreen extends StatelessWidget {
           child: BottomBar(
             showElevation: false,
             borderRadius: BorderRadius.circular(50),
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             iconSize: 30,
             curve: Curves.easeIn,
             items: [

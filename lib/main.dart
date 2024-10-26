@@ -50,6 +50,11 @@ class SensorizeMain extends StatelessWidget {
               page: const HomeScreen(),
               settings: const RouteSettings(name: HomeScreen.route),
             );
+          case ProfileScreen.route:
+            return SlideHorizontal(
+              page: const ProfileScreen(),
+              settings: const RouteSettings(name: ProfileScreen.route),
+            );
           default:
             return SlideHorizontal(
               page: const CheckAuthScreen(),

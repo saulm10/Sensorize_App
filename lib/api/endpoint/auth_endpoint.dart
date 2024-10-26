@@ -24,6 +24,9 @@ mixin AuthEndpoint implements ApiDependencies {
   }
 
   Future<void> signOut() async {
-    await supabaseService.signOut();
+    storage.delete(Constants.login);
+    storage.delete(Constants.password);
+    localDbService.cleanDb();
+    supabaseService.signOut();
   }
 }

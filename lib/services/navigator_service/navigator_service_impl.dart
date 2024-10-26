@@ -50,4 +50,19 @@ class NavigatorServiceImpl extends NavigatorService {
     return navigatorKey.currentState
         ?.popAndPushNamed(routeName, result: result, arguments: arguments);
   }
+
+  @override
+  showDialogModel(Widget screen) {
+    showDialog(
+      context: navigatorKey.currentState!.context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          content: screen,
+          contentPadding: EdgeInsets.zero,
+          insetPadding: EdgeInsets.zero,
+        );
+      },
+    );
+  }
 }

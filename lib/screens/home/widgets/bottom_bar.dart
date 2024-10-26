@@ -127,7 +127,7 @@ class _ItemWidget extends StatelessWidget {
                 : MediaQuery.of(context).size.width * 0.2)
             : ((isSelected)
                 ? MediaQuery.of(context).size.width * 0.3
-                : MediaQuery.of(context).size.width * 0.1),
+                : MediaQuery.of(context).size.width * 0.2),
         height: double.maxFinite,
         duration: animationDuration,
         curve: curve,
@@ -147,7 +147,7 @@ class _ItemWidget extends StatelessWidget {
                     : MediaQuery.of(context).size.width * 0.2)
                 : ((isSelected)
                     ? MediaQuery.of(context).size.width * 0.3
-                    : MediaQuery.of(context).size.width * 0.1),
+                    : MediaQuery.of(context).size.width * 0.2),
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Row(
               mainAxisSize: MainAxisSize.max,

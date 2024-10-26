@@ -11,4 +11,5 @@ abstract class NavigatorService {
   Future<Object?>? replaceWith(String routeName);
   Future<Object?>? popAndPushNamed(String routeName,
       {Object? result, Object? arguments});
+  showDialogModel(Widget screen);
 }

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sensorize/config/di_config/di_config.dart';
 import 'package:sensorize/database/tables/aa_tables.dart';
+import 'package:sensorize/screens/screens.dart';
 import 'package:sensorize/services/services.dart';
 
 @Injectable()
 class HomeProvider extends ChangeNotifier {
   final SincService _sincService;
   final LocalDbService _localDbService;
+  final NavigatorService _navigatorService;
   PageController pageController = PageController();
   int currentPage = 0;
 
@@ -17,6 +19,7 @@ class HomeProvider extends ChangeNotifier {
   HomeProvider(
     this._sincService,
     this._localDbService,
+    this._navigatorService,
   ) {
     sinc();
   }
@@ -44,6 +47,12 @@ class HomeProvider extends ChangeNotifier {
       duration: const Duration(milliseconds: 270),
     );
     notifyListeners();
+  }
+
+  navigateToProfile() {
+    _navigatorService.showDialogModel(
+      const ProfileScreen(),
+    );
   }
 
   static HomeProvider get() {
