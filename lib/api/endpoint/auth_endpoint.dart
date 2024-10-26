@@ -11,10 +11,16 @@ mixin AuthEndpoint implements ApiDependencies {
   }
 
   Future<AuthResponse?> signUpAuto() async {
-    return await supabaseService.signUpWithEmail(
-      await storage.read(Constants.login),
-      await storage.read(Constants.password),
-    );
+    String password = await storage.read(Constants.password);
+    String login = await storage.read(Constants.login);
+    if (login.isNotEmpty && password.isNotEmpty) {
+      return await supabaseService.signUpWithEmail(
+        login,
+        password,
+      );
+    } else {
+      return null;
+    }
   }
 
   Future<void> signOut() async {

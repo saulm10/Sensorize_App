@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sensorize/config/di_config/di_config.dart';
 import 'package:sensorize/config/env/env.dart';
 import 'package:sensorize/services/services.dart';
+import 'package:sensorize/theme/custom_theme.dart';
 
 import 'screens/screens.dart';
 
@@ -9,7 +11,23 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupEnv();
   await setupDI();
-  runApp(const SensorizeMain());
+  runApp(const SensorizeProvider());
+}
+
+class SensorizeProvider extends StatelessWidget {
+  const SensorizeProvider({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => CustomTheme(),
+        )
+      ],
+      child: const SensorizeMain(),
+    );
+  }
 }
 
 class SensorizeMain extends StatelessWidget {
@@ -18,8 +36,8 @@ class SensorizeMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Material App',
       navigatorKey: Injector.F<NavigatorService>().getNavigatorKey(),
+      theme: Provider.of<CustomTheme>(context).currentTheme,
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case LoginScreen.route:

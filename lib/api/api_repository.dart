@@ -4,7 +4,7 @@ import 'package:sensorize/services/services.dart';
 
 @singleton
 class ApiRepository
-    with AuthEndpoint, MedicionesEndpoint, SilosEndpoint
+    with AuthEndpoint, MedicionesEndpoint, SilosEndpoint, CentrosEndpoint
     implements ApiDependencies {
   final SecureStorajeService _storage;
 

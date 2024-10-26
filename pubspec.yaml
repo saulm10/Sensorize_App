@@ -8,6 +8,7 @@ environment:
   sdk: '>=3.2.2 <4.0.0'
 
 dependencies:
+  app_links: ^6.3.2
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
@@ -17,8 +18,10 @@ dependencies:
   get_it: ^7.7.0
   injectable: ^2.4.2
   isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
   path_provider: ^2.1.4
   provider: ^6.1.2
+  smooth_page_indicator: ^1.2.0+3
   supabase_flutter: ^2.8.0
 
 dev_dependencies:
@@ -35,7 +38,5 @@ flutter:
     - lib/config/env/config.env
     - assets/
     - assets/resources/
+    - assets/resources/silo/
     - assets/icon/
-
-
-

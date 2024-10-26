@@ -42,9 +42,9 @@ const SilosSchema = CollectionSchema(
       name: r'riesgo',
       type: IsarType.long,
     ),
-    r'volumne': PropertySchema(
+    r'volumen': PropertySchema(
       id: 5,
-      name: r'volumne',
+      name: r'volumen',
       type: IsarType.long,
     )
   },
@@ -85,7 +85,7 @@ void _silosSerialize(
   writer.writeString(offsets[2], object.idSilo);
   writer.writeString(offsets[3], object.nombre);
   writer.writeLong(offsets[4], object.riesgo);
-  writer.writeLong(offsets[5], object.volumne);
+  writer.writeLong(offsets[5], object.volumen);
 }
 
 Silos _silosDeserialize(
@@ -101,7 +101,7 @@ Silos _silosDeserialize(
   object.id_ = id;
   object.nombre = reader.readString(offsets[3]);
   object.riesgo = reader.readLong(offsets[4]);
-  object.volumne = reader.readLong(offsets[5]);
+  object.volumen = reader.readLong(offsets[5]);
   return object;
 }
 
@@ -761,42 +761,42 @@ extension SilosQueryFilter on QueryBuilder<Silos, Silos, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> volumneEqualTo(int value) {
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> volumenEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'volumne',
+        property: r'volumen',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> volumneGreaterThan(
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> volumenGreaterThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'volumne',
+        property: r'volumen',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> volumneLessThan(
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> volumenLessThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'volumne',
+        property: r'volumen',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> volumneBetween(
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> volumenBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -804,7 +804,7 @@ extension SilosQueryFilter on QueryBuilder<Silos, Silos, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'volumne',
+        property: r'volumen',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -879,15 +879,15 @@ extension SilosQuerySortBy on QueryBuilder<Silos, Silos, QSortBy> {
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterSortBy> sortByVolumne() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> sortByVolumen() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'volumne', Sort.asc);
+      return query.addSortBy(r'volumen', Sort.asc);
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterSortBy> sortByVolumneDesc() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> sortByVolumenDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'volumne', Sort.desc);
+      return query.addSortBy(r'volumen', Sort.desc);
     });
   }
 }
@@ -965,15 +965,15 @@ extension SilosQuerySortThenBy on QueryBuilder<Silos, Silos, QSortThenBy> {
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterSortBy> thenByVolumne() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> thenByVolumen() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'volumne', Sort.asc);
+      return query.addSortBy(r'volumen', Sort.asc);
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterSortBy> thenByVolumneDesc() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> thenByVolumenDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'volumne', Sort.desc);
+      return query.addSortBy(r'volumen', Sort.desc);
     });
   }
 }
@@ -1012,9 +1012,9 @@ extension SilosQueryWhereDistinct on QueryBuilder<Silos, Silos, QDistinct> {
     });
   }
 
-  QueryBuilder<Silos, Silos, QDistinct> distinctByVolumne() {
+  QueryBuilder<Silos, Silos, QDistinct> distinctByVolumen() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'volumne');
+      return query.addDistinctBy(r'volumen');
     });
   }
 }
@@ -1056,9 +1056,9 @@ extension SilosQueryProperty on QueryBuilder<Silos, Silos, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Silos, int, QQueryOperations> volumneProperty() {
+  QueryBuilder<Silos, int, QQueryOperations> volumenProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'volumne');
+      return query.addPropertyName(r'volumen');
     });
   }
 }

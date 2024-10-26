@@ -13,26 +13,36 @@ class LoginProvider extends ChangeNotifier {
   final ApiRepository _apiRepository;
   final NavigatorService _navigatorService;
   final SecureStorajeService _secureStorajeService;
+  final ToastService _toastService;
 
-  String login = 'saul@gmail.com';
-  String password = '123456';
+  String login = '';
+  String password = '';
+  bool isPasswordObscured = true;
 
   LoginProvider(
     this._apiRepository,
     this._navigatorService,
     this._secureStorajeService,
+    this._toastService,
   );
+
+  void passwordVisibility() {
+    isPasswordObscured = !isPasswordObscured;
+    notifyListeners();
+  }
 
   void onLoginTap() async {
     AuthResponse? response =
         await _apiRepository.signUpWithEmail(login, password);
-    if (response!.session != null) {
+    if (response != null) {
       _secureStorajeService.write(Constants.login, login);
       _secureStorajeService.write(Constants.password, password);
       _navigatorService.navigateToAndRemoveUntil(
         HomeScreen.route,
         (route) => false,
       );
+    } else {
+      _toastService.showToast('Usuario o contraseña erroneo', ToastType.error);
     }
   }
 

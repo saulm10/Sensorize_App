@@ -21,6 +21,16 @@ class SupabaseServiceImpl implements SupabaseService {
   }
 
   @override
+  Future<List<Map<String, dynamic>>?> getAll(String tableName) async {
+    try {
+      return await _dbCon.from(tableName).select();
+    } catch (e) {
+      debugPrint('Error en lectura: $e');
+      return null;
+    }
+  }
+
+  @override
   Future<AuthResponse?> signUpWithEmail(String email, String password) async {
     try {
       final response = await _dbCon.auth.signInWithPassword(

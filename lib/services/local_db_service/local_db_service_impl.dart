@@ -1,11 +1,36 @@
+import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sensorize/services/local_db_service/local_db_service.dart';
 
-abstract class LocalDbServiceImpl implements LocalDbService {
+import '../../database/tables/aa_tables.dart';
+
+@Singleton(as: LocalDbService)
+class LocalDbServiceImpl implements LocalDbService {
   @override
   late final Future<Isar> dbCon;
 
-  LocalDbServiceImpl(this.dbCon);
+  LocalDbServiceImpl() {
+    dbCon = _openDB();
+  }
+
+  Future<Isar> _openDB() async {
+    if (Isar.instanceNames.isEmpty) {
+      final dir = await getApplicationDocumentsDirectory();
+      return await Isar.open(
+        [
+          MedicionesSchema,
+          SilosSchema,
+          CentrosSchema,
+        ],
+        inspector: kDebugMode,
+        directory: dir.path,
+      );
+    }
+
+    return Future.value(Isar.getInstance());
+  }
 
   @override
   Future<List<T>> getAll<T>() async {
