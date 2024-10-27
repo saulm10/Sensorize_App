@@ -45,6 +45,17 @@ class SupabaseServiceImpl implements SupabaseService {
   }
 
   @override
+  Future<bool?> resetPassword(String enmail) async {
+    try {
+      await _dbCon.auth.resetPasswordForEmail(enmail);
+      return true;
+    } catch (e) {
+      debugPrint('Error al recuperar contraseña: $e');
+      return null;
+    }
+  }
+
+  @override
   Future<void> signOut() async {
     try {
       _dbCon.auth.signOut();

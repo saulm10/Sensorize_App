@@ -23,6 +23,10 @@ mixin AuthEndpoint implements ApiDependencies {
     }
   }
 
+  Future<bool?> resetPassword(String email) async {
+    return await supabaseService.resetPassword(email);
+  }
+
   Future<void> signOut() async {
     storage.delete(Constants.login);
     storage.delete(Constants.password);

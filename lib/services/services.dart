@@ -1,3 +1,5 @@
+export 'package:sensorize/services/diolog_service/dialog_service.dart';
+export 'package:sensorize/services/diolog_service/dialog_service_impl.dart';
 export 'package:sensorize/services/sinc_service.dart';
 export 'package:sensorize/services/local_db_service/local_db_service.dart';
 export 'package:sensorize/services/local_db_service/local_db_service_impl.dart';

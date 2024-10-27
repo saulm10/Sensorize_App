@@ -9,53 +9,20 @@ import 'package:sensorize/services/services.dart';
 class ProfileProvider extends ChangeNotifier {
   final ApiRepository _apiRepository;
   final NavigatorService _navigatorService;
+  final DialogService _dialogService;
 
-  ProfileProvider(this._apiRepository, this._navigatorService);
+  ProfileProvider(
+    this._apiRepository,
+    this._navigatorService,
+    this._dialogService,
+  );
 
   onLogOutTap() async {
-    BuildContext context = _navigatorService.getCurrentContext();
-    bool? result = await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: const Text('Cerrar sesión'),
-        content: const Text(
-            '¿Está usted seguro de cerrar sesión? Tendrá que volver a iniciar sesión si desea volver a entrar.'),
-        actions: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
-              minimumSize: const Size(40, 55),
-            ),
-            onPressed: () {
-              _navigatorService.goBack(resultado: true);
-            },
-            child: Text(
-              'Sí',
-              style: TextStyle(
-                fontSize: 20,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
-              minimumSize: const Size(40, 55),
-            ),
-            onPressed: () {
-              _navigatorService.goBack(resultado: false);
-            },
-            child: Text(
-              'No',
-              style: TextStyle(
-                fontSize: 20,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-            ),
-          ),
-        ],
-      ),
+    bool? result = await _dialogService.boolDialog(
+      'Cerrar sesión',
+      '¿Está usted seguro de cerrar sesión? Tendrá que volver a iniciar sesión si desea volver a entrar.',
+      'Sí',
+      'No',
     );
 
     if (result == true) {

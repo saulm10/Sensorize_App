@@ -20,7 +20,7 @@ class CheckAuthProvider extends ChangeNotifier {
     AuthResponse? response = await _apiRepository.signUpAuto();
     if (response != null && response.session!.accessToken.isNotEmpty) {
       _navigatorService.navigateToAndRemoveUntil(
-        HomeScreen.route,
+        TapsScreen.route,
         (route) => false,
       );
       return true;

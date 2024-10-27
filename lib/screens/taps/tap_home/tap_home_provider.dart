@@ -5,7 +5,7 @@ import 'package:sensorize/database/tables/aa_tables.dart';
 import 'package:sensorize/services/services.dart';
 
 @Injectable()
-class Tap1Provider extends ChangeNotifier {
+class TapHomeProvider extends ChangeNotifier {
   final LocalDbService _localDbService;
 
   PageController pageController = PageController(initialPage: 0);
@@ -13,7 +13,7 @@ class Tap1Provider extends ChangeNotifier {
   int currentIndex = 0;
   int lastPosition = -1;
 
-  Tap1Provider(this._localDbService) {
+  TapHomeProvider(this._localDbService) {
     notifyListeners();
   }
 
@@ -64,7 +64,7 @@ class Tap1Provider extends ChangeNotifier {
     notifyListeners();
   }
 
-  static Tap1Provider get() {
-    return Injector.F<Tap1Provider>();
+  static TapHomeProvider get() {
+    return Injector.F<TapHomeProvider>();
   }
 }

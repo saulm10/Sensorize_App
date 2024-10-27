@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sensorize/extensions/build_context_ex.dart';
-import 'package:sensorize/screens/home/home_provider.dart';
-import 'package:sensorize/screens/home/widgets/bottom_bar.dart';
-import 'package:sensorize/screens/home/widgets/simple_background.dart';
+import 'package:sensorize/screens/screens.dart';
+import 'package:sensorize/screens/taps/widgets/bottom_bar.dart';
+import 'package:sensorize/screens/taps/widgets/simple_background.dart';
 
-import 'taps/tap1/tap1_screen.dart';
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-  static const route = 'Home';
+class TapsScreen extends StatelessWidget {
+  const TapsScreen({super.key});
+  static const route = 'Taps';
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => HomeProvider.get(),
-      child: const _HomeScreen(),
+      create: (context) => TapsProvider.get(),
+      child: const _TapsScreen(),
     );
   }
 }
 
-class _HomeScreen extends StatelessWidget {
-  const _HomeScreen();
+class _TapsScreen extends StatelessWidget {
+  const _TapsScreen();
 
   @override
   Widget build(BuildContext context) {
-    HomeProvider homeProvider = Provider.of<HomeProvider>(context);
+    TapsProvider tapsProvider = Provider.of<TapsProvider>(context);
 
     return SimpleBackground(
       child: Scaffold(
@@ -37,7 +35,7 @@ class _HomeScreen extends StatelessWidget {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
               child: GestureDetector(
-                onTap: () => homeProvider.navigateToProfile(),
+                onTap: () => tapsProvider.navigateToProfile(),
                 child: const CircleAvatar(
                   maxRadius: 25,
                   child: Text('CS'),
@@ -49,9 +47,9 @@ class _HomeScreen extends StatelessWidget {
           title: SizedBox(
             width: 190,
             child: Text(
-              homeProvider.centro == null
+              tapsProvider.centro == null
                   ? 'Nombre centro'
-                  : homeProvider.centro!.nombreCentro,
+                  : tapsProvider.centro!.nombreCentro,
               style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.w600,
@@ -67,11 +65,11 @@ class _HomeScreen extends StatelessWidget {
 
         //body
         body: PageView(
-          controller: homeProvider.pageController,
-          onPageChanged: (index) => homeProvider.onScroll(index),
+          controller: tapsProvider.pageController,
+          onPageChanged: (index) => tapsProvider.onScroll(index),
           children: [
-            Tap1Screen(
-              silos: homeProvider.silos,
+            TapHomeScreen(
+              silos: tapsProvider.silos,
             ),
             Placeholder(),
             Placeholder(),
@@ -112,8 +110,8 @@ class _HomeScreen extends StatelessWidget {
                 activeBackgroundColor: context.theme.colorScheme.secondary,
               ),
             ],
-            selectedIndex: homeProvider.currentPage,
-            onItemSelected: (index) => homeProvider.onItemSelecctedTap(index),
+            selectedIndex: tapsProvider.currentPage,
+            onItemSelected: (index) => tapsProvider.onItemSelecctedTap(index),
           ),
         ),
       ),

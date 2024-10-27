@@ -6,7 +6,7 @@ import 'package:sensorize/screens/screens.dart';
 import 'package:sensorize/services/services.dart';
 
 @Injectable()
-class HomeProvider extends ChangeNotifier {
+class TapsProvider extends ChangeNotifier {
   final SincService _sincService;
   final LocalDbService _localDbService;
   final NavigatorService _navigatorService;
@@ -16,7 +16,7 @@ class HomeProvider extends ChangeNotifier {
   Centros? centro;
   List<Silos> silos = [];
 
-  HomeProvider(
+  TapsProvider(
     this._sincService,
     this._localDbService,
     this._navigatorService,
@@ -55,7 +55,7 @@ class HomeProvider extends ChangeNotifier {
     );
   }
 
-  static HomeProvider get() {
-    return Injector.F<HomeProvider>();
+  static TapsProvider get() {
+    return Injector.F<TapsProvider>();
   }
 }

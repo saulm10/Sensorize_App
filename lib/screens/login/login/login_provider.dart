@@ -38,7 +38,7 @@ class LoginProvider extends ChangeNotifier {
       _secureStorajeService.write(Constants.login, login);
       _secureStorajeService.write(Constants.password, password);
       _navigatorService.navigateToAndRemoveUntil(
-        HomeScreen.route,
+        TapsScreen.route,
         (route) => false,
       );
     } else {
