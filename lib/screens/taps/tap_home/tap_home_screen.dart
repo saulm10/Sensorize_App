@@ -106,6 +106,8 @@ class _TapHomeContent extends StatelessWidget {
                 height: 420,
                 width: 270,
                 nivel: snapshot.data![index].volumen.toDouble(),
+                warningLevel: snapshot.data![index].riesgo.toDouble(),
+                color: Colors.yellow,
               );
             },
           ),
