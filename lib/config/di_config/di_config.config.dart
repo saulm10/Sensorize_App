@@ -72,11 +72,13 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i5.NavigatorService>(),
           gh<_i5.SecureStorajeService>(),
           gh<_i5.ToastService>(),
+          gh<_i5.DialogService>(),
         ));
     gh.factory<_i16.ProfileProvider>(() => _i16.ProfileProvider(
           gh<_i12.ApiRepository>(),
           gh<_i5.NavigatorService>(),
           gh<_i5.DialogService>(),
+          gh<_i5.SecureStorajeService>(),
         ));
     gh.singleton<_i17.SincService>(() => _i17.SincService(
           gh<_i12.ApiRepository>(),

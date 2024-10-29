@@ -67,13 +67,15 @@ class _TapsScreen extends StatelessWidget {
         body: PageView(
           controller: tapsProvider.pageController,
           onPageChanged: (index) => tapsProvider.onScroll(index),
-          children: [
-            TapHomeScreen(
-              silos: tapsProvider.silos,
-            ),
-            Placeholder(),
-            Placeholder(),
-          ],
+          children: tapsProvider.sincornizado
+              ? [
+                  TapHomeScreen(
+                    silos: tapsProvider.silos,
+                  ),
+                  Placeholder(),
+                  Placeholder(),
+                ]
+              : [],
         ),
 
         //Botom bar

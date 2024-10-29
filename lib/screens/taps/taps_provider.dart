@@ -10,8 +10,10 @@ class TapsProvider extends ChangeNotifier {
   final SincService _sincService;
   final LocalDbService _localDbService;
   final NavigatorService _navigatorService;
+
   PageController pageController = PageController();
   int currentPage = 0;
+  bool sincornizado = false;
 
   Centros? centro;
   List<Silos> silos = [];
@@ -27,6 +29,7 @@ class TapsProvider extends ChangeNotifier {
   sinc() async {
     await _sincService.sincTables();
     await getCentro();
+    sincornizado = true;
     notifyListeners();
   }
 

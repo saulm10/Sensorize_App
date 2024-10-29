@@ -66,6 +66,8 @@ class _Info extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ProfileProvider profileProvider = Provider.of<ProfileProvider>(context);
+
     return Expanded(
       child: Container(
         margin: const EdgeInsets.only(bottom: 20),
@@ -84,40 +86,6 @@ class _Info extends StatelessWidget {
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
-              ),
-            ),
-            const ListTile(
-              leading: Icon(Icons.verified),
-              title: Text(
-                'Versión:',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              trailing: Text(
-                '1.0.0',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            //Tema
-            ListTile(
-              leading: Icon(Icons.dark_mode),
-              title: const Text(
-                'Tema',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              trailing: Switch(
-                value: true,
-                onChanged: (value) {
-                  false;
-                },
               ),
             ),
             //Notificaciones
@@ -139,6 +107,46 @@ class _Info extends StatelessWidget {
               ),
               onTap: () {},
             ),
+            //Tema
+            ListTile(
+              leading: const Icon(Icons.dark_mode),
+              title: const Text(
+                'Tema',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              trailing: Container(
+                width: 40,
+                height: 10,
+                alignment: Alignment.centerRight,
+                child: Switch(
+                  value: true,
+                  onChanged: (value) {
+                    false;
+                  },
+                ),
+              ),
+            ),
+            //Versión
+            ListTile(
+              leading: const Icon(Icons.verified),
+              title: const Text(
+                'Versión:',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              trailing: Text(
+                profileProvider.appVersion,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -151,20 +159,22 @@ class _UserIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ProfileProvider profileProvider = Provider.of<ProfileProvider>(context);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.all(20),
       width: MediaQuery.of(context).size.width * 0.88,
-      height: MediaQuery.of(context).size.height * 0.3,
+      height: MediaQuery.of(context).size.height * 0.31,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(
           28,
         ),
       ),
-      child: const Column(
+      child: Column(
         children: [
-          CircleAvatar(
+          const CircleAvatar(
             maxRadius: 80,
             child: Text(
               'CS',
@@ -174,9 +184,10 @@ class _UserIcon extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(height: 20),
           Text(
-            'Email@email.com',
-            style: TextStyle(
+            profileProvider.login,
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 25,
             ),

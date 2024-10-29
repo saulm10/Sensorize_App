@@ -14,6 +14,7 @@ class LoginProvider extends ChangeNotifier {
   final NavigatorService _navigatorService;
   final SecureStorajeService _secureStorajeService;
   final ToastService _toastService;
+  final DialogService _dialogService;
 
   String login = '';
   String password = '';
@@ -24,6 +25,7 @@ class LoginProvider extends ChangeNotifier {
     this._navigatorService,
     this._secureStorajeService,
     this._toastService,
+    this._dialogService,
   );
 
   void passwordVisibility() {
@@ -43,6 +45,24 @@ class LoginProvider extends ChangeNotifier {
       );
     } else {
       _toastService.showToast('Usuario o contraseña erroneo', ToastType.error);
+    }
+  }
+
+  resetPassword() async {
+    String mail = await _dialogService.stringDialog(
+      'Recuperar contraseña',
+      'Escriba el mail donde podrá recuperar la contraseña.',
+      'Email...',
+      'Listo',
+      'Volver',
+    );
+    if (mail.isNotEmpty) {
+      bool? result = await _apiRepository.resetPassword(mail);
+      if (result != null && result) {
+        _toastService.showToast('Enviado correctamente', ToastType.success);
+      } else {
+        _toastService.showToast('Error en el envío', ToastType.error);
+      }
     }
   }
 
