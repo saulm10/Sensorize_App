@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:sensorize/database/tables/aa_tables.dart';
 part 'silos.g.dart';
 
 @collection
@@ -13,6 +14,7 @@ class Silos {
   late int altura;
   late int volumen;
   late int riesgo;
+  late List<Mediciones> mediciones = [];
 
   static Silos fromMap(Map<String, dynamic> data) {
     final centro = Silos()

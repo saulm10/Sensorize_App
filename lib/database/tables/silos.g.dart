@@ -32,18 +32,24 @@ const SilosSchema = CollectionSchema(
       name: r'idSilo',
       type: IsarType.string,
     ),
-    r'nombre': PropertySchema(
+    r'mediciones': PropertySchema(
       id: 3,
+      name: r'mediciones',
+      type: IsarType.objectList,
+      target: r'Mediciones',
+    ),
+    r'nombre': PropertySchema(
+      id: 4,
       name: r'nombre',
       type: IsarType.string,
     ),
     r'riesgo': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'riesgo',
       type: IsarType.long,
     ),
     r'volumen': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'volumen',
       type: IsarType.long,
     )
@@ -55,7 +61,7 @@ const SilosSchema = CollectionSchema(
   idName: r'id_',
   indexes: {},
   links: {},
-  embeddedSchemas: {},
+  embeddedSchemas: {r'Mediciones': MedicionesSchema},
   getId: _silosGetId,
   getLinks: _silosGetLinks,
   attach: _silosAttach,
@@ -70,6 +76,14 @@ int _silosEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.idSensor.length * 3;
   bytesCount += 3 + object.idSilo.length * 3;
+  bytesCount += 3 + object.mediciones.length * 3;
+  {
+    final offsets = allOffsets[Mediciones]!;
+    for (var i = 0; i < object.mediciones.length; i++) {
+      final value = object.mediciones[i];
+      bytesCount += MedicionesSchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
   bytesCount += 3 + object.nombre.length * 3;
   return bytesCount;
 }
@@ -83,9 +97,15 @@ void _silosSerialize(
   writer.writeLong(offsets[0], object.altura);
   writer.writeString(offsets[1], object.idSensor);
   writer.writeString(offsets[2], object.idSilo);
-  writer.writeString(offsets[3], object.nombre);
-  writer.writeLong(offsets[4], object.riesgo);
-  writer.writeLong(offsets[5], object.volumen);
+  writer.writeObjectList<Mediciones>(
+    offsets[3],
+    allOffsets,
+    MedicionesSchema.serialize,
+    object.mediciones,
+  );
+  writer.writeString(offsets[4], object.nombre);
+  writer.writeLong(offsets[5], object.riesgo);
+  writer.writeLong(offsets[6], object.volumen);
 }
 
 Silos _silosDeserialize(
@@ -99,9 +119,16 @@ Silos _silosDeserialize(
   object.idSensor = reader.readString(offsets[1]);
   object.idSilo = reader.readString(offsets[2]);
   object.id_ = id;
-  object.nombre = reader.readString(offsets[3]);
-  object.riesgo = reader.readLong(offsets[4]);
-  object.volumen = reader.readLong(offsets[5]);
+  object.mediciones = reader.readObjectList<Mediciones>(
+        offsets[3],
+        MedicionesSchema.deserialize,
+        allOffsets,
+        Mediciones(),
+      ) ??
+      [];
+  object.nombre = reader.readString(offsets[4]);
+  object.riesgo = reader.readLong(offsets[5]);
+  object.volumen = reader.readLong(offsets[6]);
   return object;
 }
 
@@ -119,10 +146,18 @@ P _silosDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (reader.readObjectList<Mediciones>(
+            offset,
+            MedicionesSchema.deserialize,
+            allOffsets,
+            Mediciones(),
+          ) ??
+          []) as P;
     case 4:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 5:
+      return (reader.readLong(offset)) as P;
+    case 6:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -580,6 +615,90 @@ extension SilosQueryFilter on QueryBuilder<Silos, Silos, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> medicionesLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'mediciones',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> medicionesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'mediciones',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> medicionesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'mediciones',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> medicionesLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'mediciones',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> medicionesLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'mediciones',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> medicionesLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'mediciones',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
   QueryBuilder<Silos, Silos, QAfterFilterCondition> nombreEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -814,7 +933,14 @@ extension SilosQueryFilter on QueryBuilder<Silos, Silos, QFilterCondition> {
   }
 }
 
-extension SilosQueryObject on QueryBuilder<Silos, Silos, QFilterCondition> {}
+extension SilosQueryObject on QueryBuilder<Silos, Silos, QFilterCondition> {
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> medicionesElement(
+      FilterQuery<Mediciones> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'mediciones');
+    });
+  }
+}
 
 extension SilosQueryLinks on QueryBuilder<Silos, Silos, QFilterCondition> {}
 
@@ -1041,6 +1167,12 @@ extension SilosQueryProperty on QueryBuilder<Silos, Silos, QQueryProperty> {
   QueryBuilder<Silos, String, QQueryOperations> idSiloProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'idSilo');
+    });
+  }
+
+  QueryBuilder<Silos, List<Mediciones>, QQueryOperations> medicionesProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'mediciones');
     });
   }
 

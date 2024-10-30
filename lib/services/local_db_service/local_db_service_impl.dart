@@ -20,7 +20,6 @@ class LocalDbServiceImpl implements LocalDbService {
       final dir = await getApplicationDocumentsDirectory();
       return await Isar.open(
         [
-          MedicionesSchema,
           SilosSchema,
           CentrosSchema,
         ],

@@ -3,23 +3,19 @@
 part of 'mediciones.dart';
 
 // **************************************************************************
-// IsarCollectionGenerator
+// IsarEmbeddedGenerator
 // **************************************************************************
 
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetMedicionesCollection on Isar {
-  IsarCollection<Mediciones> get mediciones => this.collection();
-}
-
-const MedicionesSchema = CollectionSchema(
+const MedicionesSchema = Schema(
   name: r'Mediciones',
   id: -2928636043220005330,
   properties: {
-    r'fechaRegistro': PropertySchema(
+    r'fechaResgistro': PropertySchema(
       id: 0,
-      name: r'fechaRegistro',
+      name: r'fechaResgistro',
       type: IsarType.dateTime,
     ),
     r'idMedicion': PropertySchema(
@@ -27,14 +23,14 @@ const MedicionesSchema = CollectionSchema(
       name: r'idMedicion',
       type: IsarType.string,
     ),
-    r'idSilo': PropertySchema(
+    r'idSensor': PropertySchema(
       id: 2,
-      name: r'idSilo',
+      name: r'idSensor',
       type: IsarType.string,
     ),
-    r'resultado': PropertySchema(
+    r'medicion': PropertySchema(
       id: 3,
-      name: r'resultado',
+      name: r'medicion',
       type: IsarType.long,
     )
   },
@@ -42,14 +38,6 @@ const MedicionesSchema = CollectionSchema(
   serialize: _medicionesSerialize,
   deserialize: _medicionesDeserialize,
   deserializeProp: _medicionesDeserializeProp,
-  idName: r'id_',
-  indexes: {},
-  links: {},
-  embeddedSchemas: {},
-  getId: _medicionesGetId,
-  getLinks: _medicionesGetLinks,
-  attach: _medicionesAttach,
-  version: '3.1.0+1',
 );
 
 int _medicionesEstimateSize(
@@ -59,7 +47,7 @@ int _medicionesEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.idMedicion.length * 3;
-  bytesCount += 3 + object.idSilo.length * 3;
+  bytesCount += 3 + object.idSensor.length * 3;
   return bytesCount;
 }
 
@@ -69,10 +57,10 @@ void _medicionesSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDateTime(offsets[0], object.fechaRegistro);
+  writer.writeDateTime(offsets[0], object.fechaResgistro);
   writer.writeString(offsets[1], object.idMedicion);
-  writer.writeString(offsets[2], object.idSilo);
-  writer.writeLong(offsets[3], object.resultado);
+  writer.writeString(offsets[2], object.idSensor);
+  writer.writeLong(offsets[3], object.medicion);
 }
 
 Mediciones _medicionesDeserialize(
@@ -82,11 +70,10 @@ Mediciones _medicionesDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Mediciones();
-  object.fechaRegistro = reader.readDateTime(offsets[0]);
+  object.fechaResgistro = reader.readDateTime(offsets[0]);
   object.idMedicion = reader.readString(offsets[1]);
-  object.idSilo = reader.readString(offsets[2]);
-  object.id_ = id;
-  object.resultado = reader.readLong(offsets[3]);
+  object.idSensor = reader.readString(offsets[2]);
+  object.medicion = reader.readLong(offsets[3]);
   return object;
 }
 
@@ -110,138 +97,48 @@ P _medicionesDeserializeProp<P>(
   }
 }
 
-Id _medicionesGetId(Mediciones object) {
-  return object.id_;
-}
-
-List<IsarLinkBase<dynamic>> _medicionesGetLinks(Mediciones object) {
-  return [];
-}
-
-void _medicionesAttach(IsarCollection<dynamic> col, Id id, Mediciones object) {
-  object.id_ = id;
-}
-
-extension MedicionesQueryWhereSort
-    on QueryBuilder<Mediciones, Mediciones, QWhere> {
-  QueryBuilder<Mediciones, Mediciones, QAfterWhere> anyId_() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(const IdWhereClause.any());
-    });
-  }
-}
-
-extension MedicionesQueryWhere
-    on QueryBuilder<Mediciones, Mediciones, QWhereClause> {
-  QueryBuilder<Mediciones, Mediciones, QAfterWhereClause> id_EqualTo(Id id_) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: id_,
-        upper: id_,
-      ));
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterWhereClause> id_NotEqualTo(
-      Id id_) {
-    return QueryBuilder.apply(this, (query) {
-      if (query.whereSort == Sort.asc) {
-        return query
-            .addWhereClause(
-              IdWhereClause.lessThan(upper: id_, includeUpper: false),
-            )
-            .addWhereClause(
-              IdWhereClause.greaterThan(lower: id_, includeLower: false),
-            );
-      } else {
-        return query
-            .addWhereClause(
-              IdWhereClause.greaterThan(lower: id_, includeLower: false),
-            )
-            .addWhereClause(
-              IdWhereClause.lessThan(upper: id_, includeUpper: false),
-            );
-      }
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterWhereClause> id_GreaterThan(Id id_,
-      {bool include = false}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.greaterThan(lower: id_, includeLower: include),
-      );
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterWhereClause> id_LessThan(Id id_,
-      {bool include = false}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.lessThan(upper: id_, includeUpper: include),
-      );
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterWhereClause> id_Between(
-    Id lowerId_,
-    Id upperId_, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: lowerId_,
-        includeLower: includeLower,
-        upper: upperId_,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-}
-
 extension MedicionesQueryFilter
     on QueryBuilder<Mediciones, Mediciones, QFilterCondition> {
   QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition>
-      fechaRegistroEqualTo(DateTime value) {
+      fechaResgistroEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'fechaRegistro',
+        property: r'fechaResgistro',
         value: value,
       ));
     });
   }
 
   QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition>
-      fechaRegistroGreaterThan(
+      fechaResgistroGreaterThan(
     DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'fechaRegistro',
+        property: r'fechaResgistro',
         value: value,
       ));
     });
   }
 
   QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition>
-      fechaRegistroLessThan(
+      fechaResgistroLessThan(
     DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'fechaRegistro',
+        property: r'fechaResgistro',
         value: value,
       ));
     });
   }
 
   QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition>
-      fechaRegistroBetween(
+      fechaResgistroBetween(
     DateTime lower,
     DateTime upper, {
     bool includeLower = true,
@@ -249,7 +146,7 @@ extension MedicionesQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'fechaRegistro',
+        property: r'fechaResgistro',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -393,20 +290,21 @@ extension MedicionesQueryFilter
     });
   }
 
-  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> idSiloEqualTo(
+  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> idSensorEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'idSilo',
+        property: r'idSensor',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> idSiloGreaterThan(
+  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition>
+      idSensorGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -414,14 +312,14 @@ extension MedicionesQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'idSilo',
+        property: r'idSensor',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> idSiloLessThan(
+  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> idSensorLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -429,14 +327,14 @@ extension MedicionesQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'idSilo',
+        property: r'idSensor',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> idSiloBetween(
+  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> idSensorBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -445,7 +343,7 @@ extension MedicionesQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'idSilo',
+        property: r'idSensor',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -455,166 +353,115 @@ extension MedicionesQueryFilter
     });
   }
 
-  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> idSiloStartsWith(
+  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition>
+      idSensorStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'idSilo',
+        property: r'idSensor',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> idSiloEndsWith(
+  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> idSensorEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'idSilo',
+        property: r'idSensor',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> idSiloContains(
+  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> idSensorContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'idSilo',
+        property: r'idSensor',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> idSiloMatches(
+  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> idSensorMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'idSilo',
+        property: r'idSensor',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> idSiloIsEmpty() {
+  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition>
+      idSensorIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'idSilo',
+        property: r'idSensor',
         value: '',
       ));
     });
   }
 
   QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition>
-      idSiloIsNotEmpty() {
+      idSensorIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'idSilo',
+        property: r'idSensor',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> id_EqualTo(
-      Id value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id_',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> id_GreaterThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'id_',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> id_LessThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'id_',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> id_Between(
-    Id lower,
-    Id upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'id_',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> resultadoEqualTo(
+  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> medicionEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'resultado',
+        property: r'medicion',
         value: value,
       ));
     });
   }
 
   QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition>
-      resultadoGreaterThan(
+      medicionGreaterThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'resultado',
+        property: r'medicion',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> resultadoLessThan(
+  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> medicionLessThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'resultado',
+        property: r'medicion',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> resultadoBetween(
+  QueryBuilder<Mediciones, Mediciones, QAfterFilterCondition> medicionBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -622,7 +469,7 @@ extension MedicionesQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'resultado',
+        property: r'medicion',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -634,182 +481,3 @@ extension MedicionesQueryFilter
 
 extension MedicionesQueryObject
     on QueryBuilder<Mediciones, Mediciones, QFilterCondition> {}
-
-extension MedicionesQueryLinks
-    on QueryBuilder<Mediciones, Mediciones, QFilterCondition> {}
-
-extension MedicionesQuerySortBy
-    on QueryBuilder<Mediciones, Mediciones, QSortBy> {
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> sortByFechaRegistro() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'fechaRegistro', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> sortByFechaRegistroDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'fechaRegistro', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> sortByIdMedicion() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'idMedicion', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> sortByIdMedicionDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'idMedicion', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> sortByIdSilo() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'idSilo', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> sortByIdSiloDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'idSilo', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> sortByResultado() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'resultado', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> sortByResultadoDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'resultado', Sort.desc);
-    });
-  }
-}
-
-extension MedicionesQuerySortThenBy
-    on QueryBuilder<Mediciones, Mediciones, QSortThenBy> {
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> thenByFechaRegistro() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'fechaRegistro', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> thenByFechaRegistroDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'fechaRegistro', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> thenByIdMedicion() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'idMedicion', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> thenByIdMedicionDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'idMedicion', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> thenByIdSilo() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'idSilo', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> thenByIdSiloDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'idSilo', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> thenById_() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id_', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> thenById_Desc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id_', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> thenByResultado() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'resultado', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QAfterSortBy> thenByResultadoDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'resultado', Sort.desc);
-    });
-  }
-}
-
-extension MedicionesQueryWhereDistinct
-    on QueryBuilder<Mediciones, Mediciones, QDistinct> {
-  QueryBuilder<Mediciones, Mediciones, QDistinct> distinctByFechaRegistro() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'fechaRegistro');
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QDistinct> distinctByIdMedicion(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'idMedicion', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QDistinct> distinctByIdSilo(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'idSilo', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<Mediciones, Mediciones, QDistinct> distinctByResultado() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'resultado');
-    });
-  }
-}
-
-extension MedicionesQueryProperty
-    on QueryBuilder<Mediciones, Mediciones, QQueryProperty> {
-  QueryBuilder<Mediciones, int, QQueryOperations> id_Property() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'id_');
-    });
-  }
-
-  QueryBuilder<Mediciones, DateTime, QQueryOperations> fechaRegistroProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'fechaRegistro');
-    });
-  }
-
-  QueryBuilder<Mediciones, String, QQueryOperations> idMedicionProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'idMedicion');
-    });
-  }
-
-  QueryBuilder<Mediciones, String, QQueryOperations> idSiloProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'idSilo');
-    });
-  }
-
-  QueryBuilder<Mediciones, int, QQueryOperations> resultadoProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'resultado');
-    });
-  }
-}

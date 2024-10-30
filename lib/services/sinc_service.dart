@@ -16,6 +16,7 @@ class SincService {
   sincTables() async {
     await sincCentros();
     await sincSilos();
+    await sincMediciones();
   }
 
   sincCentros() async {
@@ -28,5 +29,16 @@ class SincService {
     await _localDbService.deleteAll<Silos>();
     _localDbService
         .saveAll<Silos>(Silos.fromMapList(await _apiRepository.getSilos()));
+  }
+
+  sincMediciones() async {
+    List<Silos> silos = await _localDbService.getAll<Silos>();
+    for (var silo in silos) {
+      List<Mediciones> medicionesAux = Mediciones.fromMapList(
+        await _apiRepository.getMediodionesSilo(silo.idSilo),
+      );
+      silo.mediciones = medicionesAux;
+      _localDbService.update(silo);
+    }
   }
 }
