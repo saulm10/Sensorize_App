@@ -85,8 +85,8 @@ class Silowidget extends StatelessWidget {
               child: Transform.translate(
                 offset: Offset(0, height * 0.55 * (1 - (warningLevel / 100))),
                 child: Container(
-                  height: 5,
-                  width: 50,
+                  height: height * 0.02,
+                  width: height * 0.2,
                   decoration: BoxDecoration(
                       color: Colors.red,
                       borderRadius: BorderRadius.circular(30)),

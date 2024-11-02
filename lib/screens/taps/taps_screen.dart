@@ -25,6 +25,7 @@ class _TapsScreen extends StatelessWidget {
     TapsProvider tapsProvider = Provider.of<TapsProvider>(context);
 
     return SimpleBackground(
+      position: tapsProvider.currentPage,
       child: Scaffold(
         backgroundColor: Colors.transparent,
 
@@ -32,6 +33,14 @@ class _TapsScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           actions: [
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.notifications,
+                size: 40,
+                color: context.theme.colorScheme.primary,
+              ),
+            ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
               child: GestureDetector(
@@ -69,10 +78,8 @@ class _TapsScreen extends StatelessWidget {
           onPageChanged: (index) => tapsProvider.onScroll(index),
           children: tapsProvider.sincornizado
               ? [
-                  TapHomeScreen(
-                    silos: tapsProvider.silos,
-                  ),
-                  Placeholder(),
+                  const TapHomeScreen(),
+                  const TapSilosScreen(),
                   Placeholder(),
                 ]
               : [],

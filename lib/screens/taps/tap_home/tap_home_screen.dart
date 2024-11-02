@@ -8,8 +8,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'tap_home_provider.dart';
 
 class TapHomeScreen extends StatelessWidget {
-  final List<Silos> silos;
-  const TapHomeScreen({super.key, required this.silos});
+  const TapHomeScreen({super.key});
 
   // Índice actual de la página
   @override
