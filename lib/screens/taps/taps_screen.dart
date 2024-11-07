@@ -34,7 +34,7 @@ class _TapsScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () => tapsProvider.navigateToNotifications(),
               icon: Icon(
                 Icons.notifications,
                 size: 40,
@@ -80,7 +80,7 @@ class _TapsScreen extends StatelessWidget {
               ? [
                   const TapHomeScreen(),
                   const TapSilosScreen(),
-                  Placeholder(),
+                  const Placeholder(),
                 ]
               : [],
         ),

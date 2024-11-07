@@ -2,7 +2,7 @@ import 'package:injectable/injectable.dart';
 import 'package:flutter/material.dart';
 import 'package:sensorize/config/di_config/di_config.dart';
 
-import '../../../database/tables/aa_tables.dart';
+import '../../../database/aa_tables.dart';
 import '../../../services/services.dart';
 
 @Injectable()

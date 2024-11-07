@@ -4,7 +4,7 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sensorize/services/local_db_service/local_db_service.dart';
 
-import '../../database/tables/aa_tables.dart';
+import '../../database/aa_tables.dart';
 
 @Singleton(as: LocalDbService)
 class LocalDbServiceImpl implements LocalDbService {
@@ -22,6 +22,7 @@ class LocalDbServiceImpl implements LocalDbService {
         [
           SilosSchema,
           CentrosSchema,
+          NotificationsSchema,
         ],
         inspector: kDebugMode,
         directory: dir.path,

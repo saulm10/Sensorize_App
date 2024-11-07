@@ -1,3 +1,5 @@
+export 'package:sensorize/screens/notifications/notifications_provider.dart';
+export 'package:sensorize/screens/notifications/notifications_screen.dart';
 export 'package:sensorize/screens/taps/tap_silos/tap_silos_provider.dart';
 export 'package:sensorize/screens/taps/tap_silos/tap_silos_screen.dart';
 export 'package:sensorize/screens/taps/tap_home/tap_home_provider.dart';

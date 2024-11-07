@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sensorize/database/tables/aa_tables.dart';
+import 'package:sensorize/database/aa_tables.dart';
 import 'package:sensorize/extensions/build_context_ex.dart';
 import 'package:sensorize/widgets/silo_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';

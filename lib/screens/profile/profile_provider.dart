@@ -45,9 +45,9 @@ class ProfileProvider extends ChangeNotifier {
   onLogOutTap() async {
     bool? result = await _dialogService.boolDialog(
       'Cerrar sesión',
-      '¿Está usted seguro de cerrar sesión? Tendrá que volver a iniciar sesión si desea volver a entrar.',
-      'Sí',
-      'No',
+      'Tendrá que volver a iniciar sesión.',
+      'Cerrar sesión',
+      'Cancelar',
     );
 
     if (result == true) {

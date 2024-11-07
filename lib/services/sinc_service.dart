@@ -1,6 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:sensorize/api/api_repository.dart';
-import 'package:sensorize/database/tables/aa_tables.dart';
+import 'package:sensorize/database/aa_tables.dart';
 import 'package:sensorize/services/services.dart';
 
 @Singleton()

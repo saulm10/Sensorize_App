@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sensorize/config/di_config/di_config.dart';
-import 'package:sensorize/database/tables/aa_tables.dart';
+import 'package:sensorize/database/aa_tables.dart';
 import 'package:sensorize/screens/screens.dart';
 import 'package:sensorize/services/services.dart';
 
@@ -55,6 +55,12 @@ class TapsProvider extends ChangeNotifier {
   navigateToProfile() {
     _navigatorService.showDialogModel(
       const ProfileScreen(),
+    );
+  }
+
+  navigateToNotifications() {
+    _navigatorService.showDialogModel(
+      const NotificationsScreen(),
     );
   }
 

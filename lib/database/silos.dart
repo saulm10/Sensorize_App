@@ -1,5 +1,5 @@
 import 'package:isar/isar.dart';
-import 'package:sensorize/database/tables/aa_tables.dart';
+import 'package:sensorize/database/aa_tables.dart';
 part 'silos.g.dart';
 
 @collection

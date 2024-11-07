@@ -14,11 +14,13 @@ import 'package:sensorize/api/api_repository.dart' as _i13;
 import 'package:sensorize/screens/login/check_auth/check_auth_provider.dart'
     as _i14;
 import 'package:sensorize/screens/login/login/login_provider.dart' as _i16;
-import 'package:sensorize/screens/profile/profile_provider.dart' as _i17;
+import 'package:sensorize/screens/notifications/notifications_provider.dart'
+    as _i17;
+import 'package:sensorize/screens/profile/profile_provider.dart' as _i18;
 import 'package:sensorize/screens/taps/tap_home/tap_home_provider.dart' as _i9;
 import 'package:sensorize/screens/taps/tap_silos/tap_silos_provider.dart'
     as _i10;
-import 'package:sensorize/screens/taps/taps_provider.dart' as _i19;
+import 'package:sensorize/screens/taps/taps_provider.dart' as _i20;
 import 'package:sensorize/services/diolog_service/dialog_service_impl.dart'
     as _i15;
 import 'package:sensorize/services/local_db_service/local_db_service.dart'
@@ -30,7 +32,7 @@ import 'package:sensorize/services/navigator_service/navigator_service_impl.dart
 import 'package:sensorize/services/secure_storaje_service/secure_storaje_service_impl.dart'
     as _i7;
 import 'package:sensorize/services/services.dart' as _i5;
-import 'package:sensorize/services/sinc_service.dart' as _i18;
+import 'package:sensorize/services/sinc_service.dart' as _i19;
 import 'package:sensorize/services/supabase_service/supabase_service_impl.dart'
     as _i8;
 import 'package:sensorize/services/toast_service/toast_service.dart' as _i11;
@@ -78,17 +80,21 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i5.ToastService>(),
           gh<_i5.DialogService>(),
         ));
-    gh.factory<_i17.ProfileProvider>(() => _i17.ProfileProvider(
+    gh.factory<_i17.NotificationsProvider>(() => _i17.NotificationsProvider(
+          gh<_i5.LocalDbService>(),
+          gh<_i5.DialogService>(),
+        ));
+    gh.factory<_i18.ProfileProvider>(() => _i18.ProfileProvider(
           gh<_i13.ApiRepository>(),
           gh<_i5.NavigatorService>(),
           gh<_i5.DialogService>(),
           gh<_i5.SecureStorajeService>(),
         ));
-    gh.singleton<_i18.SincService>(() => _i18.SincService(
+    gh.singleton<_i19.SincService>(() => _i19.SincService(
           gh<_i13.ApiRepository>(),
           gh<_i5.LocalDbService>(),
         ));
-    gh.factory<_i19.TapsProvider>(() => _i19.TapsProvider(
+    gh.factory<_i20.TapsProvider>(() => _i20.TapsProvider(
           gh<_i5.SincService>(),
           gh<_i5.LocalDbService>(),
           gh<_i5.NavigatorService>(),
