@@ -11,16 +11,19 @@
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 import 'package:sensorize/api/api_repository.dart' as _i13;
+import 'package:sensorize/database/aa_tables.dart' as _i20;
 import 'package:sensorize/screens/login/check_auth/check_auth_provider.dart'
     as _i14;
 import 'package:sensorize/screens/login/login/login_provider.dart' as _i16;
 import 'package:sensorize/screens/notifications/notifications_provider.dart'
     as _i17;
 import 'package:sensorize/screens/profile/profile_provider.dart' as _i18;
+import 'package:sensorize/screens/silo_detail/silo_detail_provider.dart'
+    as _i19;
 import 'package:sensorize/screens/taps/tap_home/tap_home_provider.dart' as _i9;
 import 'package:sensorize/screens/taps/tap_silos/tap_silos_provider.dart'
     as _i10;
-import 'package:sensorize/screens/taps/taps_provider.dart' as _i20;
+import 'package:sensorize/screens/taps/taps_provider.dart' as _i22;
 import 'package:sensorize/services/diolog_service/dialog_service_impl.dart'
     as _i15;
 import 'package:sensorize/services/local_db_service/local_db_service.dart'
@@ -32,7 +35,7 @@ import 'package:sensorize/services/navigator_service/navigator_service_impl.dart
 import 'package:sensorize/services/secure_storaje_service/secure_storaje_service_impl.dart'
     as _i7;
 import 'package:sensorize/services/services.dart' as _i5;
-import 'package:sensorize/services/sinc_service.dart' as _i19;
+import 'package:sensorize/services/sinc_service.dart' as _i21;
 import 'package:sensorize/services/supabase_service/supabase_service_impl.dart'
     as _i8;
 import 'package:sensorize/services/toast_service/toast_service.dart' as _i11;
@@ -56,8 +59,10 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i7.SecureStorajeServiceImpl());
     gh.singleton<_i5.SupabaseService>(
         () => _i8.SupabaseServiceImpl(gh<_i5.SecureStorajeService>()));
-    gh.factory<_i9.TapHomeProvider>(
-        () => _i9.TapHomeProvider(gh<_i5.LocalDbService>()));
+    gh.factory<_i9.TapHomeProvider>(() => _i9.TapHomeProvider(
+          gh<_i5.LocalDbService>(),
+          gh<_i5.NavigatorService>(),
+        ));
     gh.factory<_i10.TapSilosProvider>(
         () => _i10.TapSilosProvider(gh<_i5.LocalDbService>()));
     gh.singleton<_i11.ToastService>(() => _i12.ToastServiceImpl());
@@ -90,11 +95,20 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i5.DialogService>(),
           gh<_i5.SecureStorajeService>(),
         ));
-    gh.singleton<_i19.SincService>(() => _i19.SincService(
+    gh.factoryParam<_i19.SiloDetailProvider, _i20.Silos, dynamic>((
+      silo,
+      _,
+    ) =>
+        _i19.SiloDetailProvider(
+          silo,
+          gh<_i5.LocalDbService>(),
+          gh<_i5.DialogService>(),
+        ));
+    gh.singleton<_i21.SincService>(() => _i21.SincService(
           gh<_i13.ApiRepository>(),
           gh<_i5.LocalDbService>(),
         ));
-    gh.factory<_i20.TapsProvider>(() => _i20.TapsProvider(
+    gh.factory<_i22.TapsProvider>(() => _i22.TapsProvider(
           gh<_i5.SincService>(),
           gh<_i5.LocalDbService>(),
           gh<_i5.NavigatorService>(),

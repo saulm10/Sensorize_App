@@ -1,3 +1,5 @@
+export 'package:sensorize/screens/silo_detail/silo_detail_provider.dart';
+export 'package:sensorize/screens/silo_detail/silo_detail_screen.dart';
 export 'package:sensorize/screens/notifications/notifications_provider.dart';
 export 'package:sensorize/screens/notifications/notifications_screen.dart';
 export 'package:sensorize/screens/taps/tap_silos/tap_silos_provider.dart';

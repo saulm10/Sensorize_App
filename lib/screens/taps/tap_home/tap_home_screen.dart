@@ -87,6 +87,7 @@ class _TapHomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var tapHomeprovider = context.watch<TapHomeProvider>();
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -194,7 +195,8 @@ class _TapHomeContent extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () =>
+                    tapHomeprovider.navigateToSiloDetail(snapshot.data!),
                 icon: const Icon(
                   Icons.info_outline_rounded,
                   size: 30,
