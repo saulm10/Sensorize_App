@@ -16,7 +16,7 @@ class SiloDetailProvider extends ChangeNotifier {
     this._dialogService,
   );
 
-  static SiloDetailProvider get(Silos silo) {
+  static SiloDetailProvider get(Silos? silo) {
     return Injector.L()<SiloDetailProvider>(param1: silo);
   }
 }

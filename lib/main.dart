@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sensorize/config/di_config/di_config.dart';
 import 'package:sensorize/config/env/env.dart';
+import 'package:sensorize/database/aa_tables.dart';
 import 'package:sensorize/services/services.dart';
 import 'package:sensorize/theme/custom_theme.dart';
 
@@ -50,6 +51,12 @@ class SensorizeMain extends StatelessWidget {
               page: const TapsScreen(),
               settings: const RouteSettings(name: TapsScreen.route),
             );
+          case SiloDetailScreen.route:
+            return SlideHorizontal(
+                page: SiloDetailScreen(
+                  siloAux: settings.arguments as Silos?,
+                ),
+                settings: const RouteSettings(name: TapsScreen.route));
           case ProfileScreen.route:
             return SlideHorizontal(
               page: const ProfileScreen(),

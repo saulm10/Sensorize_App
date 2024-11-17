@@ -51,11 +51,8 @@ class TapHomeProvider extends ChangeNotifier {
   }
 
   navigateToSiloDetail(List<Silos> silosAux) {
-    _navigatorService.showDialogModel(
-      SiloDetailScreen(
-        siloAux: silosAux[currentIndex],
-      ),
-    );
+    _navigatorService.navigateToWithArgs(
+        SiloDetailScreen.route, silosAux[currentIndex]);
   }
 
   onArrowTapRight() async {

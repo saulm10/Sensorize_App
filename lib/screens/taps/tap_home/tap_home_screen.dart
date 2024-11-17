@@ -102,12 +102,15 @@ class _TapHomeContent extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              return Silowidget(
-                height: 420,
-                width: 270,
-                nivel: snapshot.data![index].volumen.toDouble(),
-                warningLevel: snapshot.data![index].riesgo.toDouble(),
-                color: Colors.yellow,
+              return Hero(
+                tag: snapshot.data![index].id_,
+                child: Silowidget(
+                  height: 420,
+                  width: 270,
+                  nivel: snapshot.data![index].volumen.toDouble(),
+                  warningLevel: snapshot.data![index].riesgo.toDouble(),
+                  color: Colors.yellow,
+                ),
               );
             },
           ),
