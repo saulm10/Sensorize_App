@@ -23,7 +23,7 @@ class _TapSilosScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TapSilosProvider provider = Provider.of<TapSilosProvider>(context);
+    TapSilosProvider provider = context.watch<TapSilosProvider>();
     return CustomScrollView(
       slivers: [
         //Chips

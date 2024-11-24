@@ -50,7 +50,7 @@ class LoginCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LoginProvider loginProvider = Provider.of<LoginProvider>(context);
+    LoginProvider loginProvider = context.watch<LoginProvider>();
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.44,

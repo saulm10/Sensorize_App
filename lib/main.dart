@@ -38,7 +38,7 @@ class SensorizeMain extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: Injector.F<NavigatorService>().getNavigatorKey(),
-      theme: Provider.of<CustomTheme>(context).currentTheme,
+      theme: context.watch<CustomTheme>().currentTheme,
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case LoginScreen.route:

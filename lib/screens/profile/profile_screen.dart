@@ -42,7 +42,7 @@ class _BtnLoginOut extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ProfileProvider profileProvider = Provider.of<ProfileProvider>(context);
+    ProfileProvider profileProvider = context.watch<ProfileProvider>();
 
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
@@ -66,7 +66,7 @@ class _Info extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ProfileProvider profileProvider = Provider.of<ProfileProvider>(context);
+    ProfileProvider profileProvider = context.watch<ProfileProvider>();
 
     return Expanded(
       child: Container(
@@ -159,7 +159,7 @@ class _UserIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ProfileProvider profileProvider = Provider.of<ProfileProvider>(context);
+    ProfileProvider profileProvider = context.watch<ProfileProvider>();
 
     return Container(
       margin: const EdgeInsets.only(bottom: 20),

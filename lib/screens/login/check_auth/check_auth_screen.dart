@@ -20,8 +20,7 @@ class _CheckAuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CheckAuthProvider checkAuthProvider =
-        Provider.of<CheckAuthProvider>(context);
+    CheckAuthProvider checkAuthProvider = context.watch<CheckAuthProvider>();
     return Scaffold(
       body: FutureBuilder<bool>(
         future: checkAuthProvider.loginAuth(),

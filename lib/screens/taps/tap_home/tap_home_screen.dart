@@ -25,7 +25,7 @@ class _TapHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TapHomeProvider tapHomeprovider = Provider.of<TapHomeProvider>(context);
+    TapHomeProvider tapHomeprovider = context.watch<TapHomeProvider>();
     return FutureBuilder(
       future: tapHomeprovider.getSilos(),
       builder: (context, snapshot) {
