@@ -33,6 +33,14 @@ class LocalDbServiceImpl implements LocalDbService {
   }
 
   @override
+  Future<T?> getFirst<T>() async {
+    final isar = await dbCon;
+
+    return isar
+        .writeTxnSync(() => isar.collection<T>().where().findFirstSync());
+  }
+
+  @override
   Future<List<T>> getAll<T>() async {
     final isar = await dbCon;
 

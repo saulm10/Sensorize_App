@@ -1,5 +1,6 @@
 abstract class LocalDbService {
   Future<dynamic> get dbCon;
+  Future<T?> getFirst<T>();
   Future<List<T>> getAll<T>();
   Future<T?> getById<T>(dynamic id);
   Future<void> deleteAll<T>();

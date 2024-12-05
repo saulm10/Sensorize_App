@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
 
-class CustomTheme extends ChangeNotifier {
-  late ThemeData currentTheme;
+class CustomTheme {
+  static const Color _primary = Color.fromRGBO(9, 38, 8, 1);
+  static const Color _secondary = Color.fromRGBO(104, 229, 101, 1);
+  static const Color _tertiary = Color.fromRGBO(240, 255, 238, 1);
+  static const Color _white = Color.fromRGBO(255, 255, 255, 1);
+  static const Color _black = Color.fromRGBO(0, 0, 0, 1);
 
-  CustomTheme() {
-    setLightMode();
+  static ThemeData setLightMode() {
+    return ThemeData(
+      useMaterial3: true,
+      colorScheme: const ColorScheme.light(
+        primary: _primary,
+        onPrimary: _white,
+        secondary: _secondary,
+        onSecondary: _black,
+        tertiary: _tertiary,
+        onTertiary: _black,
+      ),
+    );
   }
 
-  final Color _primary = const Color.fromRGBO(9, 38, 8, 1);
-  final Color _secondary = const Color.fromRGBO(104, 229, 101, 1);
-  final Color _tertiary = const Color.fromRGBO(240, 255, 238, 1);
-  final Color _white = const Color.fromRGBO(255, 255, 255, 1);
-  final Color _black = const Color.fromRGBO(0, 0, 0, 1);
-
-  void setLightMode() {
-    currentTheme = ThemeData(
+  static ThemeData setDarkMode() {
+    return ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.light(
+      colorScheme: const ColorScheme.dark(
         primary: _primary,
         onPrimary: _white,
         secondary: _secondary,

@@ -40,9 +40,9 @@ class _TapsScreen extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: GestureDetector(
               onTap: () => tapsProvider.navigateToProfile(),
-              child: const CircleAvatar(
+              child: CircleAvatar(
                 maxRadius: 25,
-                child: Text('CS'),
+                child: Text(tapsProvider.centro.getInitials()),
               ),
             ),
           )

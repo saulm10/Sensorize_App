@@ -66,7 +66,7 @@ class _Info extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ProfileProvider profileProvider = context.watch<ProfileProvider>();
+    var profileProvider = context.watch<ProfileProvider>();
 
     return Expanded(
       child: Container(
@@ -122,10 +122,8 @@ class _Info extends StatelessWidget {
                 height: 10,
                 alignment: Alignment.centerRight,
                 child: Switch(
-                  value: true,
-                  onChanged: (value) {
-                    false;
-                  },
+                  value: profileProvider.isLightTheme,
+                  onChanged: (value) => profileProvider.onThemeSwitchTap(),
                 ),
               ),
             ),
@@ -174,11 +172,11 @@ class _UserIcon extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             maxRadius: 80,
             child: Text(
-              'CS',
-              style: TextStyle(
+              profileProvider.centro.getInitials(),
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 50,
               ),
