@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sensorize/database/aa_tables.dart';
 import 'package:sensorize/extensions/build_context_ex.dart';
 import 'package:sensorize/widgets/silo_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../../database/aa_tables.dart';
 import 'tap_home_provider.dart';
 
 class TapHomeScreen extends StatelessWidget {
@@ -103,12 +103,12 @@ class _TapHomeContent extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return Hero(
-                tag: snapshot.data![index].id_,
+                tag: snapshot.data![index].id,
                 child: Silowidget(
                   height: 420,
                   width: 270,
                   nivel: snapshot.data![index].volumen.toDouble(),
-                  warningLevel: snapshot.data![index].riesgo.toDouble(),
+                  warningLevel: snapshot.data![index].risk.toDouble(),
                   color: Colors.yellow,
                 ),
               );
@@ -191,7 +191,7 @@ class _TapHomeContent extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                snapshot.data![tapHomeprovider.currentIndex].nombre,
+                snapshot.data![tapHomeprovider.currentIndex].siloName,
                 style: const TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,

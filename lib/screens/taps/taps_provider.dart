@@ -15,7 +15,7 @@ class TapsProvider extends ChangeNotifier {
   int currentPage = 0;
   bool sincornizado = false;
 
-  Centros centro = Centros();
+  Farm? centro;
 
   TapsProvider(
     this._sincService,
@@ -26,14 +26,14 @@ class TapsProvider extends ChangeNotifier {
   }
 
   sinc() async {
-    await _sincService.sincTables();
+    await _sincService.localSinc();
     await getCentro();
     sincornizado = true;
     notifyListeners();
   }
 
   getCentro() async {
-    centro = (await _localDbService.getFirst<Centros>())!;
+    centro = await _localDbService.getFirst<Farm>();
   }
 
   onScroll(int index) async {

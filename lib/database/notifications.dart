@@ -2,7 +2,7 @@ import 'package:isar/isar.dart';
 
 part 'notifications.g.dart';
 
-@Collection()
+@collection
 class Notifications {
   Id id_ = Isar.autoIncrement;
   late String title;

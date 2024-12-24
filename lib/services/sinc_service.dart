@@ -1,44 +1,51 @@
 import 'package:injectable/injectable.dart';
-import 'package:sensorize/api/api_repository.dart';
+import 'package:sensorize/api/api_manager_impl.dart';
+import 'package:sensorize/config/constants.dart';
 import 'package:sensorize/database/aa_tables.dart';
+import 'package:sensorize/models/model.dart';
+import 'package:sensorize/services/local_db_service/deserialize.dart';
 import 'package:sensorize/services/services.dart';
 
 @Singleton()
 class SincService {
-  final ApiRepository _apiRepository;
+  final ApiManagerImpl _apiManager;
   final LocalDbService _localDbService;
+  final SecureStorajeService _secureStorajeService;
 
   SincService(
-    this._apiRepository,
+    this._apiManager,
     this._localDbService,
+    this._secureStorajeService,
   );
 
-  sincTables() async {
-    await sincCentros();
-    await sincSilos();
-    await sincMediciones();
-  }
-
-  sincCentros() async {
-    await _localDbService.deleteAll<Centros>();
-    _localDbService.saveAll<Centros>(
-        Centros.fromMapList(await _apiRepository.getCentro()));
-  }
-
-  sincSilos() async {
-    await _localDbService.deleteAll<Silos>();
-    _localDbService
-        .saveAll<Silos>(Silos.fromMapList(await _apiRepository.getSilos()));
-  }
-
-  sincMediciones() async {
-    List<Silos> silos = await _localDbService.getAll<Silos>();
-    for (var silo in silos) {
-      List<Mediciones> medicionesAux = Mediciones.fromMapList(
-        await _apiRepository.getMediodionesSilo(silo.idSilo),
-      );
-      silo.mediciones = medicionesAux;
-      _localDbService.update(silo);
+  localSinc() async {
+    ResultDto result = await _apiManager.sincData();
+    if (result.ok) {
+      SincDto sinc = SincDto.fromJson(result.data ?? {});
+      await sincLiveStock(sinc);
+      await sincSilos(sinc);
     }
+  }
+
+  sincLiveStock(SincDto sinc) async {
+    await _localDbService.deleteAll<Farm>();
+    Farm newLivestock = Deserialize.farmFromLocalLiveStock(sinc.livestockDto);
+    _localDbService.save<Farm>(newLivestock);
+  }
+
+  sincSilos(SincDto sinc) async {
+    await _localDbService.deleteAll<Silos>();
+    List<Silos> newSilos = [];
+    for (var silo in sinc.livestockDto.siloDto) {
+      newSilos.add(Deserialize.siloFromLocalSilo(silo));
+    }
+    _localDbService.saveAll<Silos>(newSilos);
+  }
+
+  Future<void> signOut() async {
+    _secureStorajeService.delete(Constants.login);
+    _secureStorajeService.delete(Constants.password);
+    _secureStorajeService.delete(Constants.token);
+    _localDbService.cleanDb();
   }
 }

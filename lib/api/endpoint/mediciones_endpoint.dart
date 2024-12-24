@@ -1,13 +1,3 @@
-import 'package:sensorize/api/api_repository.dart';
-import 'package:sensorize/database/aa_tables.dart';
+import 'package:sensorize/api/api_manager.dart';
 
-mixin MedicionesEndpoint implements ApiDependencies {
-  Future<List<Map<String, dynamic>>> getMediodionesSilo(String idSilo) async {
-    return await supabaseService.getAllFiltered(
-          Mediciones.collectionName,
-          'idSilo',
-          idSilo,
-        ) ??
-        [];
-  }
-}
+mixin MedicionesEndpoint implements ApiManager {}

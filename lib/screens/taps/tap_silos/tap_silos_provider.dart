@@ -32,7 +32,7 @@ class TapSilosProvider extends ChangeNotifier {
         filterstate = Filtrado.menosLlenos;
         break;
       default:
-        silos.sort((a, b) => a.nombre.compareTo(b.nombre));
+        silos.sort((a, b) => a.siloName.compareTo(b.siloName));
         filterstate = Filtrado.alfabetico;
     }
     notifyListeners();

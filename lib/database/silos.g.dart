@@ -17,39 +17,29 @@ const SilosSchema = CollectionSchema(
   name: r'Silos',
   id: -8412791901242536629,
   properties: {
-    r'altura': PropertySchema(
+    r'height': PropertySchema(
       id: 0,
-      name: r'altura',
-      type: IsarType.long,
+      name: r'height',
+      type: IsarType.double,
     ),
-    r'idSensor': PropertySchema(
+    r'risk': PropertySchema(
       id: 1,
-      name: r'idSensor',
-      type: IsarType.string,
-    ),
-    r'idSilo': PropertySchema(
-      id: 2,
-      name: r'idSilo',
-      type: IsarType.string,
-    ),
-    r'mediciones': PropertySchema(
-      id: 3,
-      name: r'mediciones',
-      type: IsarType.objectList,
-      target: r'Mediciones',
-    ),
-    r'nombre': PropertySchema(
-      id: 4,
-      name: r'nombre',
-      type: IsarType.string,
-    ),
-    r'riesgo': PropertySchema(
-      id: 5,
-      name: r'riesgo',
+      name: r'risk',
       type: IsarType.long,
+    ),
+    r'sensor': PropertySchema(
+      id: 2,
+      name: r'sensor',
+      type: IsarType.object,
+      target: r'Sensor',
+    ),
+    r'siloName': PropertySchema(
+      id: 3,
+      name: r'siloName',
+      type: IsarType.string,
     ),
     r'volumen': PropertySchema(
-      id: 6,
+      id: 4,
       name: r'volumen',
       type: IsarType.long,
     )
@@ -58,10 +48,10 @@ const SilosSchema = CollectionSchema(
   serialize: _silosSerialize,
   deserialize: _silosDeserialize,
   deserializeProp: _silosDeserializeProp,
-  idName: r'id_',
+  idName: r'id',
   indexes: {},
   links: {},
-  embeddedSchemas: {r'Mediciones': MedicionesSchema},
+  embeddedSchemas: {r'Sensor': SensorSchema},
   getId: _silosGetId,
   getLinks: _silosGetLinks,
   attach: _silosAttach,
@@ -74,17 +64,9 @@ int _silosEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.idSensor.length * 3;
-  bytesCount += 3 + object.idSilo.length * 3;
-  bytesCount += 3 + object.mediciones.length * 3;
-  {
-    final offsets = allOffsets[Mediciones]!;
-    for (var i = 0; i < object.mediciones.length; i++) {
-      final value = object.mediciones[i];
-      bytesCount += MedicionesSchema.estimateSize(value, offsets, allOffsets);
-    }
-  }
-  bytesCount += 3 + object.nombre.length * 3;
+  bytesCount += 3 +
+      SensorSchema.estimateSize(object.sensor, allOffsets[Sensor]!, allOffsets);
+  bytesCount += 3 + object.siloName.length * 3;
   return bytesCount;
 }
 
@@ -94,18 +76,16 @@ void _silosSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.altura);
-  writer.writeString(offsets[1], object.idSensor);
-  writer.writeString(offsets[2], object.idSilo);
-  writer.writeObjectList<Mediciones>(
-    offsets[3],
+  writer.writeDouble(offsets[0], object.height);
+  writer.writeLong(offsets[1], object.risk);
+  writer.writeObject<Sensor>(
+    offsets[2],
     allOffsets,
-    MedicionesSchema.serialize,
-    object.mediciones,
+    SensorSchema.serialize,
+    object.sensor,
   );
-  writer.writeString(offsets[4], object.nombre);
-  writer.writeLong(offsets[5], object.riesgo);
-  writer.writeLong(offsets[6], object.volumen);
+  writer.writeString(offsets[3], object.siloName);
+  writer.writeLong(offsets[4], object.volumen);
 }
 
 Silos _silosDeserialize(
@@ -115,20 +95,17 @@ Silos _silosDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Silos();
-  object.altura = reader.readLong(offsets[0]);
-  object.idSensor = reader.readString(offsets[1]);
-  object.idSilo = reader.readString(offsets[2]);
-  object.id_ = id;
-  object.mediciones = reader.readObjectList<Mediciones>(
-        offsets[3],
-        MedicionesSchema.deserialize,
+  object.height = reader.readDouble(offsets[0]);
+  object.id = id;
+  object.risk = reader.readLong(offsets[1]);
+  object.sensor = reader.readObjectOrNull<Sensor>(
+        offsets[2],
+        SensorSchema.deserialize,
         allOffsets,
-        Mediciones(),
       ) ??
-      [];
-  object.nombre = reader.readString(offsets[4]);
-  object.riesgo = reader.readLong(offsets[5]);
-  object.volumen = reader.readLong(offsets[6]);
+      Sensor();
+  object.siloName = reader.readString(offsets[3]);
+  object.volumen = reader.readLong(offsets[4]);
   return object;
 }
 
@@ -140,24 +117,19 @@ P _silosDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLong(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
-    case 2:
-      return (reader.readString(offset)) as P;
-    case 3:
-      return (reader.readObjectList<Mediciones>(
-            offset,
-            MedicionesSchema.deserialize,
-            allOffsets,
-            Mediciones(),
-          ) ??
-          []) as P;
-    case 4:
-      return (reader.readString(offset)) as P;
-    case 5:
       return (reader.readLong(offset)) as P;
-    case 6:
+    case 2:
+      return (reader.readObjectOrNull<Sensor>(
+            offset,
+            SensorSchema.deserialize,
+            allOffsets,
+          ) ??
+          Sensor()) as P;
+    case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -165,7 +137,7 @@ P _silosDeserializeProp<P>(
 }
 
 Id _silosGetId(Silos object) {
-  return object.id_;
+  return object.id;
 }
 
 List<IsarLinkBase<dynamic>> _silosGetLinks(Silos object) {
@@ -173,11 +145,11 @@ List<IsarLinkBase<dynamic>> _silosGetLinks(Silos object) {
 }
 
 void _silosAttach(IsarCollection<dynamic> col, Id id, Silos object) {
-  object.id_ = id;
+  object.id = id;
 }
 
 extension SilosQueryWhereSort on QueryBuilder<Silos, Silos, QWhere> {
-  QueryBuilder<Silos, Silos, QAfterWhere> anyId_() {
+  QueryBuilder<Silos, Silos, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
@@ -185,66 +157,66 @@ extension SilosQueryWhereSort on QueryBuilder<Silos, Silos, QWhere> {
 }
 
 extension SilosQueryWhere on QueryBuilder<Silos, Silos, QWhereClause> {
-  QueryBuilder<Silos, Silos, QAfterWhereClause> id_EqualTo(Id id_) {
+  QueryBuilder<Silos, Silos, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: id_,
-        upper: id_,
+        lower: id,
+        upper: id,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterWhereClause> id_NotEqualTo(Id id_) {
+  QueryBuilder<Silos, Silos, QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(
-              IdWhereClause.lessThan(upper: id_, includeUpper: false),
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
             )
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: id_, includeLower: false),
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
             );
       } else {
         return query
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: id_, includeLower: false),
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
             )
             .addWhereClause(
-              IdWhereClause.lessThan(upper: id_, includeUpper: false),
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
             );
       }
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterWhereClause> id_GreaterThan(Id id_,
+  QueryBuilder<Silos, Silos, QAfterWhereClause> idGreaterThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.greaterThan(lower: id_, includeLower: include),
+        IdWhereClause.greaterThan(lower: id, includeLower: include),
       );
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterWhereClause> id_LessThan(Id id_,
+  QueryBuilder<Silos, Silos, QAfterWhereClause> idLessThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.lessThan(upper: id_, includeUpper: include),
+        IdWhereClause.lessThan(upper: id, includeUpper: include),
       );
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterWhereClause> id_Between(
-    Id lowerId_,
-    Id upperId_, {
+  QueryBuilder<Silos, Silos, QAfterWhereClause> idBetween(
+    Id lowerId,
+    Id upperId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: lowerId_,
+        lower: lowerId,
         includeLower: includeLower,
-        upper: upperId_,
+        upper: upperId,
         includeUpper: includeUpper,
       ));
     });
@@ -252,353 +224,104 @@ extension SilosQueryWhere on QueryBuilder<Silos, Silos, QWhereClause> {
 }
 
 extension SilosQueryFilter on QueryBuilder<Silos, Silos, QFilterCondition> {
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> alturaEqualTo(int value) {
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> heightEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'altura',
+        property: r'height',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> alturaGreaterThan(
-    int value, {
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> heightGreaterThan(
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'altura',
+        property: r'height',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> alturaLessThan(
-    int value, {
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> heightLessThan(
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'altura',
+        property: r'height',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> alturaBetween(
-    int lower,
-    int upper, {
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> heightBetween(
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'altura',
+        property: r'height',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        epsilon: epsilon,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSensorEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'idSensor',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSensorGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'idSensor',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSensorLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'idSensor',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSensorBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'idSensor',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSensorStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'idSensor',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSensorEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'idSensor',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSensorContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'idSensor',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSensorMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'idSensor',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSensorIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'idSensor',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSensorIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'idSensor',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSiloEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'idSilo',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSiloGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'idSilo',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSiloLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'idSilo',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSiloBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'idSilo',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSiloStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'idSilo',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSiloEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'idSilo',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSiloContains(String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'idSilo',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSiloMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'idSilo',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSiloIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'idSilo',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> idSiloIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'idSilo',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> id_EqualTo(Id value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id_',
+        property: r'id',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> id_GreaterThan(
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> idGreaterThan(
     Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'id_',
+        property: r'id',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> id_LessThan(
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> idLessThan(
     Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'id_',
+        property: r'id',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> id_Between(
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -606,7 +329,7 @@ extension SilosQueryFilter on QueryBuilder<Silos, Silos, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'id_',
+        property: r'id',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -615,104 +338,72 @@ extension SilosQueryFilter on QueryBuilder<Silos, Silos, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> medicionesLengthEqualTo(
-      int length) {
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> riskEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'mediciones',
-        length,
-        true,
-        length,
-        true,
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'risk',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> medicionesIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'mediciones',
-        0,
-        true,
-        0,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> medicionesIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'mediciones',
-        0,
-        false,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> medicionesLengthLessThan(
-    int length, {
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> riskGreaterThan(
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'mediciones',
-        0,
-        true,
-        length,
-        include,
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'risk',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> medicionesLengthGreaterThan(
-    int length, {
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> riskLessThan(
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'mediciones',
-        length,
-        include,
-        999999,
-        true,
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'risk',
+        value: value,
+      ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> medicionesLengthBetween(
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> riskBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'mediciones',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'risk',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> nombreEqualTo(
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> siloNameEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'nombre',
+        property: r'siloName',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> nombreGreaterThan(
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> siloNameGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -720,14 +411,14 @@ extension SilosQueryFilter on QueryBuilder<Silos, Silos, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'nombre',
+        property: r'siloName',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> nombreLessThan(
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> siloNameLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -735,14 +426,14 @@ extension SilosQueryFilter on QueryBuilder<Silos, Silos, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'nombre',
+        property: r'siloName',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> nombreBetween(
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> siloNameBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -751,7 +442,7 @@ extension SilosQueryFilter on QueryBuilder<Silos, Silos, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'nombre',
+        property: r'siloName',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -761,121 +452,70 @@ extension SilosQueryFilter on QueryBuilder<Silos, Silos, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> nombreStartsWith(
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> siloNameStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'nombre',
+        property: r'siloName',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> nombreEndsWith(
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> siloNameEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'nombre',
+        property: r'siloName',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> nombreContains(String value,
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> siloNameContains(
+      String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'nombre',
+        property: r'siloName',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> nombreMatches(
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> siloNameMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'nombre',
+        property: r'siloName',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> nombreIsEmpty() {
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> siloNameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'nombre',
+        property: r'siloName',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> nombreIsNotEmpty() {
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> siloNameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'nombre',
+        property: r'siloName',
         value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> riesgoEqualTo(int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'riesgo',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> riesgoGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'riesgo',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> riesgoLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'riesgo',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> riesgoBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'riesgo',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
       ));
     });
   }
@@ -934,10 +574,10 @@ extension SilosQueryFilter on QueryBuilder<Silos, Silos, QFilterCondition> {
 }
 
 extension SilosQueryObject on QueryBuilder<Silos, Silos, QFilterCondition> {
-  QueryBuilder<Silos, Silos, QAfterFilterCondition> medicionesElement(
-      FilterQuery<Mediciones> q) {
+  QueryBuilder<Silos, Silos, QAfterFilterCondition> sensor(
+      FilterQuery<Sensor> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'mediciones');
+      return query.object(q, r'sensor');
     });
   }
 }
@@ -945,63 +585,39 @@ extension SilosQueryObject on QueryBuilder<Silos, Silos, QFilterCondition> {
 extension SilosQueryLinks on QueryBuilder<Silos, Silos, QFilterCondition> {}
 
 extension SilosQuerySortBy on QueryBuilder<Silos, Silos, QSortBy> {
-  QueryBuilder<Silos, Silos, QAfterSortBy> sortByAltura() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> sortByHeight() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'altura', Sort.asc);
+      return query.addSortBy(r'height', Sort.asc);
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterSortBy> sortByAlturaDesc() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> sortByHeightDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'altura', Sort.desc);
+      return query.addSortBy(r'height', Sort.desc);
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterSortBy> sortByIdSensor() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> sortByRisk() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'idSensor', Sort.asc);
+      return query.addSortBy(r'risk', Sort.asc);
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterSortBy> sortByIdSensorDesc() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> sortByRiskDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'idSensor', Sort.desc);
+      return query.addSortBy(r'risk', Sort.desc);
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterSortBy> sortByIdSilo() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> sortBySiloName() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'idSilo', Sort.asc);
+      return query.addSortBy(r'siloName', Sort.asc);
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterSortBy> sortByIdSiloDesc() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> sortBySiloNameDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'idSilo', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterSortBy> sortByNombre() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'nombre', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterSortBy> sortByNombreDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'nombre', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterSortBy> sortByRiesgo() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'riesgo', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterSortBy> sortByRiesgoDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'riesgo', Sort.desc);
+      return query.addSortBy(r'siloName', Sort.desc);
     });
   }
 
@@ -1019,75 +635,51 @@ extension SilosQuerySortBy on QueryBuilder<Silos, Silos, QSortBy> {
 }
 
 extension SilosQuerySortThenBy on QueryBuilder<Silos, Silos, QSortThenBy> {
-  QueryBuilder<Silos, Silos, QAfterSortBy> thenByAltura() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> thenByHeight() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'altura', Sort.asc);
+      return query.addSortBy(r'height', Sort.asc);
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterSortBy> thenByAlturaDesc() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> thenByHeightDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'altura', Sort.desc);
+      return query.addSortBy(r'height', Sort.desc);
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterSortBy> thenByIdSensor() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'idSensor', Sort.asc);
+      return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterSortBy> thenByIdSensorDesc() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'idSensor', Sort.desc);
+      return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterSortBy> thenByIdSilo() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> thenByRisk() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'idSilo', Sort.asc);
+      return query.addSortBy(r'risk', Sort.asc);
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterSortBy> thenByIdSiloDesc() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> thenByRiskDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'idSilo', Sort.desc);
+      return query.addSortBy(r'risk', Sort.desc);
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterSortBy> thenById_() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> thenBySiloName() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id_', Sort.asc);
+      return query.addSortBy(r'siloName', Sort.asc);
     });
   }
 
-  QueryBuilder<Silos, Silos, QAfterSortBy> thenById_Desc() {
+  QueryBuilder<Silos, Silos, QAfterSortBy> thenBySiloNameDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id_', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterSortBy> thenByNombre() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'nombre', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterSortBy> thenByNombreDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'nombre', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterSortBy> thenByRiesgo() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'riesgo', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QAfterSortBy> thenByRiesgoDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'riesgo', Sort.desc);
+      return query.addSortBy(r'siloName', Sort.desc);
     });
   }
 
@@ -1105,36 +697,22 @@ extension SilosQuerySortThenBy on QueryBuilder<Silos, Silos, QSortThenBy> {
 }
 
 extension SilosQueryWhereDistinct on QueryBuilder<Silos, Silos, QDistinct> {
-  QueryBuilder<Silos, Silos, QDistinct> distinctByAltura() {
+  QueryBuilder<Silos, Silos, QDistinct> distinctByHeight() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'altura');
+      return query.addDistinctBy(r'height');
     });
   }
 
-  QueryBuilder<Silos, Silos, QDistinct> distinctByIdSensor(
+  QueryBuilder<Silos, Silos, QDistinct> distinctByRisk() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'risk');
+    });
+  }
+
+  QueryBuilder<Silos, Silos, QDistinct> distinctBySiloName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'idSensor', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QDistinct> distinctByIdSilo(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'idSilo', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QDistinct> distinctByNombre(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'nombre', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<Silos, Silos, QDistinct> distinctByRiesgo() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'riesgo');
+      return query.addDistinctBy(r'siloName', caseSensitive: caseSensitive);
     });
   }
 
@@ -1146,45 +724,33 @@ extension SilosQueryWhereDistinct on QueryBuilder<Silos, Silos, QDistinct> {
 }
 
 extension SilosQueryProperty on QueryBuilder<Silos, Silos, QQueryProperty> {
-  QueryBuilder<Silos, int, QQueryOperations> id_Property() {
+  QueryBuilder<Silos, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'id_');
+      return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<Silos, int, QQueryOperations> alturaProperty() {
+  QueryBuilder<Silos, double, QQueryOperations> heightProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'altura');
+      return query.addPropertyName(r'height');
     });
   }
 
-  QueryBuilder<Silos, String, QQueryOperations> idSensorProperty() {
+  QueryBuilder<Silos, int, QQueryOperations> riskProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'idSensor');
+      return query.addPropertyName(r'risk');
     });
   }
 
-  QueryBuilder<Silos, String, QQueryOperations> idSiloProperty() {
+  QueryBuilder<Silos, Sensor, QQueryOperations> sensorProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'idSilo');
+      return query.addPropertyName(r'sensor');
     });
   }
 
-  QueryBuilder<Silos, List<Mediciones>, QQueryOperations> medicionesProperty() {
+  QueryBuilder<Silos, String, QQueryOperations> siloNameProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'mediciones');
-    });
-  }
-
-  QueryBuilder<Silos, String, QQueryOperations> nombreProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'nombre');
-    });
-  }
-
-  QueryBuilder<Silos, int, QQueryOperations> riesgoProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'riesgo');
+      return query.addPropertyName(r'siloName');
     });
   }
 
@@ -1194,3 +760,125 @@ extension SilosQueryProperty on QueryBuilder<Silos, Silos, QQueryProperty> {
     });
   }
 }
+
+// **************************************************************************
+// IsarEmbeddedGenerator
+// **************************************************************************
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+
+const SensorSchema = Schema(
+  name: r'Sensor',
+  id: -7696782883064080717,
+  properties: {
+    r'id': PropertySchema(
+      id: 0,
+      name: r'id',
+      type: IsarType.long,
+    )
+  },
+  estimateSize: _sensorEstimateSize,
+  serialize: _sensorSerialize,
+  deserialize: _sensorDeserialize,
+  deserializeProp: _sensorDeserializeProp,
+);
+
+int _sensorEstimateSize(
+  Sensor object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  return bytesCount;
+}
+
+void _sensorSerialize(
+  Sensor object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeLong(offsets[0], object.id);
+}
+
+Sensor _sensorDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = Sensor();
+  object.id = reader.readLong(offsets[0]);
+  return object;
+}
+
+P _sensorDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readLong(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+extension SensorQueryFilter on QueryBuilder<Sensor, Sensor, QFilterCondition> {
+  QueryBuilder<Sensor, Sensor, QAfterFilterCondition> idEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Sensor, Sensor, QAfterFilterCondition> idGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Sensor, Sensor, QAfterFilterCondition> idLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Sensor, Sensor, QAfterFilterCondition> idBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+}
+
+extension SensorQueryObject on QueryBuilder<Sensor, Sensor, QFilterCondition> {}

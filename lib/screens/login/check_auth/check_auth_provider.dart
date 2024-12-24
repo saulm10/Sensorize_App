@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
-import 'package:sensorize/api/api_repository.dart';
+import 'package:sensorize/api/api_manager_impl.dart';
+import 'package:sensorize/config/constants.dart';
 import 'package:sensorize/config/di_config/di_config.dart';
+import 'package:sensorize/models/model.dart';
 import 'package:sensorize/screens/screens.dart';
 import 'package:sensorize/services/services.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 @Injectable()
 class CheckAuthProvider extends ChangeNotifier {
-  final ApiRepository _apiRepository;
+  final ApiManagerImpl _apiManager;
   final NavigatorService _navigatorService;
+  final SecureStorajeService _secureStorajeService;
 
   CheckAuthProvider(
-    this._apiRepository,
+    this._apiManager,
     this._navigatorService,
+    this._secureStorajeService,
   );
 
   Future<bool> loginAuth() async {
-    AuthResponse? response = await _apiRepository.signUpAuto();
-    if (response != null && response.session!.accessToken.isNotEmpty) {
+    ResultDto? response = await _apiManager.signUpAuto();
+    if (response != null && response.ok) {
+      await _secureStorajeService.write(Constants.token, response.token);
       _navigatorService.navigateToAndRemoveUntil(
         TapsScreen.route,
         (route) => false,

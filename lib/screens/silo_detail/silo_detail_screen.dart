@@ -32,7 +32,7 @@ class _SiloDetailScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         centerTitle: true,
         title: Text(
-          provider.silo.nombre,
+          provider.silo.siloName,
           style: const TextStyle(
             fontSize: 40,
             fontWeight: FontWeight.bold,
@@ -157,12 +157,12 @@ class _SiloDetailScreen extends StatelessWidget {
                         left: 50,
                         top: 10,
                         child: Hero(
-                          tag: provider.silo.id_,
+                          tag: provider.silo.id,
                           child: Silowidget(
                             height: 340,
                             width: 210,
                             nivel: provider.silo.volumen.toDouble(),
-                            warningLevel: provider.silo.riesgo.toDouble(),
+                            warningLevel: provider.silo.risk.toDouble(),
                             color: Colors.yellow,
                           ),
                         ),
@@ -254,7 +254,7 @@ class Tab1 extends StatelessWidget {
               ),
             ),
             subtitle: Text(
-              provider.silo.nombre,
+              provider.silo.siloName,
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
@@ -286,7 +286,7 @@ class Tab1 extends StatelessWidget {
               onChanged: (value) {},
             ),
             trailing: Text(
-              '${provider.silo.riesgo}%',
+              '${provider.silo.risk}%',
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -310,7 +310,7 @@ class Tab1 extends StatelessWidget {
               ),
             ),
             subtitle: Text(
-              provider.silo.nombre,
+              provider.silo.siloName,
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
@@ -338,7 +338,7 @@ class Tab1 extends StatelessWidget {
               ),
             ),
             subtitle: Text(
-              provider.silo.nombre,
+              provider.silo.siloName,
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.normal,

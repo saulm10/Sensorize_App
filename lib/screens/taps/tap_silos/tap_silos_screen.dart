@@ -56,7 +56,7 @@ class _TapSilosScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      provider.silos[index].nombre,
+                      provider.silos[index].siloName,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -72,7 +72,7 @@ class _TapSilosScreen extends StatelessWidget {
                           height: 100,
                           width: 75,
                           nivel: provider.silos[index].volumen.toDouble(),
-                          warningLevel: provider.silos[index].riesgo.toDouble(),
+                          warningLevel: provider.silos[index].risk.toDouble(),
                           color: Colors.yellow,
                         ),
                         TweenAnimationBuilder(

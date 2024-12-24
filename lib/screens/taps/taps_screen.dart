@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sensorize/extensions/build_context_ex.dart';
+import 'package:sensorize/extensions/text_ex.dart';
 import 'package:sensorize/screens/screens.dart';
 import 'package:sensorize/screens/taps/widgets/bottom_bar.dart';
 import 'package:sensorize/screens/taps/widgets/simple_background.dart';
@@ -42,7 +43,7 @@ class _TapsScreen extends StatelessWidget {
               onTap: () => tapsProvider.navigateToProfile(),
               child: CircleAvatar(
                 maxRadius: 25,
-                child: Text(tapsProvider.centro.getInitials()),
+                child: Text(tapsProvider.centro?.name.getInitials() ?? ''),
               ),
             ),
           )
@@ -53,7 +54,7 @@ class _TapsScreen extends StatelessWidget {
           child: Text(
             tapsProvider.centro == null
                 ? 'Nombre centro'
-                : tapsProvider.centro!.nombreCentro,
+                : tapsProvider.centro!.name,
             style: const TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.w600,

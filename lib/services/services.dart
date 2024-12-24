@@ -1,3 +1,5 @@
+export 'package:sensorize/services/https_service/https_service.dart';
+export 'package:sensorize/services/https_service/https_service_impl.dart';
 export 'package:sensorize/services/diolog_service/dialog_service.dart';
 export 'package:sensorize/services/diolog_service/dialog_service_impl.dart';
 export 'package:sensorize/services/sinc_service.dart';
@@ -7,7 +9,5 @@ export 'package:sensorize/services/navigator_service/navigator_service.dart';
 export 'package:sensorize/services/navigator_service/navigator_service_impl.dart';
 export 'package:sensorize/services/secure_storaje_service/secure_storaje_service.dart';
 export 'package:sensorize/services/secure_storaje_service/secure_storaje_service_impl.dart';
-export 'package:sensorize/services/supabase_service/supabase_service.dart';
-export 'package:sensorize/services/supabase_service/supabase_service_impl.dart';
 export 'package:sensorize/services/toast_service/toast_service.dart';
 export 'package:sensorize/services/toast_service/toast_service_impl.dart';

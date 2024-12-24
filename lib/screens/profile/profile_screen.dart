@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sensorize/extensions/build_context_ex.dart';
+import 'package:sensorize/extensions/text_ex.dart';
 
 import 'profile_provider.dart';
 
@@ -88,25 +89,6 @@ class _Info extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            //Notificaciones
-            ListTile(
-              leading: const Icon(Icons.notifications),
-              title: const Text(
-                'Notificaciones',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              trailing: const Text(
-                '0',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              onTap: () {},
-            ),
             //Tema
             ListTile(
               leading: const Icon(Icons.dark_mode),
@@ -166,28 +148,30 @@ class _UserIcon extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.31,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(
-          28,
-        ),
+        borderRadius: BorderRadius.circular(28),
       ),
       child: Column(
         children: [
-          CircleAvatar(
-            maxRadius: 80,
-            child: Text(
-              profileProvider.centro.getInitials(),
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 50,
+          Expanded(
+            flex: 6,
+            child: CircleAvatar(
+              maxRadius: 80,
+              child: Text(
+                profileProvider.centro?.name.getInitials() ?? '',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 50,
+                ),
               ),
             ),
           ),
-          const SizedBox(height: 20),
-          Text(
-            profileProvider.login,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 25,
+          Expanded(
+            flex: 1,
+            child: Text(
+              profileProvider.login,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],

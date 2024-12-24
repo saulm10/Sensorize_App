@@ -4,22 +4,20 @@ import 'package:sensorize/theme/custom_theme.dart';
 
 @Injectable()
 class Globals extends ChangeNotifier {
-  late ThemeData _currentTheme;
+  ThemeData currentTheme = CustomTheme.setLightMode();
   late int _notifications;
 
-  Globals() {
-    if (ThemeMode.system == ThemeMode.light) {
-      _currentTheme = CustomTheme.setLightMode();
-    } else {
-      _currentTheme = CustomTheme.setDarkMode();
-    }
-  }
+  // Globals() {
+  //   if (ThemeMode.system == ThemeMode.light) {
+  //     _currentTheme = CustomTheme.setLightMode();
+  //   } else {
+  //     _currentTheme = CustomTheme.setDarkMode();
+  //   }
+  // }
 
-  ThemeData get currentTheme => _currentTheme;
-
-  set currentTheme(ThemeData newThemeData) {
-    if (_currentTheme != newThemeData) {
-      _currentTheme = newThemeData;
+  setCurrentTheme(ThemeData newThemeData) {
+    if (currentTheme != newThemeData) {
+      currentTheme = newThemeData;
       notifyListeners();
     }
   }

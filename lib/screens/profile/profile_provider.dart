@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:sensorize/api/api_repository.dart';
 import 'package:sensorize/config/constants.dart';
 import 'package:sensorize/config/di_config/di_config.dart';
 import 'package:sensorize/config/globals.dart';
@@ -12,23 +11,23 @@ import 'package:sensorize/theme/custom_theme.dart';
 
 @Injectable()
 class ProfileProvider extends ChangeNotifier {
-  final ApiRepository _apiRepository;
   final NavigatorService _navigatorService;
   final DialogService _dialogService;
   final SecureStorajeService _secureStorajeService;
   final LocalDbService _localDbService;
+  final SincService _sincService;
 
-  Centros centro = Centros();
+  Farm? centro;
   String login = '';
   String appVersion = '1.0.0?';
   bool isLightTheme = true;
 
   ProfileProvider(
-    this._apiRepository,
     this._navigatorService,
     this._dialogService,
     this._secureStorajeService,
     this._localDbService,
+    this._sincService,
   ) {
     sincSreen();
   }
@@ -42,7 +41,8 @@ class ProfileProvider extends ChangeNotifier {
 
   onThemeSwitchTap() {
     isLightTheme = !isLightTheme;
-    Injector.F<Globals>().currentTheme = CustomTheme.setDarkMode();
+    Injector.F<Globals>().currentTheme =
+        isLightTheme ? CustomTheme.setLightMode() : CustomTheme.setDarkMode();
     notifyListeners();
   }
 
@@ -64,7 +64,7 @@ class ProfileProvider extends ChangeNotifier {
     );
 
     if (result == true) {
-      _apiRepository.signOut();
+      _sincService.signOut();
       _navigatorService.navigateToAndRemoveUntil(
         LoginScreen.route,
         (route) => false,
@@ -73,7 +73,7 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   getCentro() async {
-    centro = (await _localDbService.getFirst<Centros>())!;
+    centro = await _localDbService.getFirst<Farm>();
   }
 
   static ProfileProvider get() {

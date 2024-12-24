@@ -5,7 +5,6 @@ import 'package:sensorize/config/env/env.dart';
 import 'package:sensorize/config/globals.dart';
 import 'package:sensorize/database/aa_tables.dart';
 import 'package:sensorize/services/services.dart';
-import 'package:sensorize/theme/custom_theme.dart';
 
 import 'screens/screens.dart';
 

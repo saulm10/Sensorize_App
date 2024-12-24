@@ -1,31 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
-import 'package:sensorize/api/api_repository.dart';
+import 'package:sensorize/api/api_manager_impl.dart';
 import 'package:sensorize/config/constants.dart';
 import 'package:sensorize/config/di_config/di_config.dart';
+import 'package:sensorize/models/model.dart';
 import 'package:sensorize/services/services.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../screens.dart';
 
 @Injectable()
 class LoginProvider extends ChangeNotifier {
-  final ApiRepository _apiRepository;
+  final ApiManagerImpl _apiManager;
   final NavigatorService _navigatorService;
   final SecureStorajeService _secureStorajeService;
   final ToastService _toastService;
-  final DialogService _dialogService;
 
   String login = '';
   String password = '';
   bool isPasswordObscured = true;
 
   LoginProvider(
-    this._apiRepository,
+    this._apiManager,
     this._navigatorService,
     this._secureStorajeService,
     this._toastService,
-    this._dialogService,
   );
 
   void passwordVisibility() {
@@ -34,35 +32,19 @@ class LoginProvider extends ChangeNotifier {
   }
 
   void onLoginTap() async {
-    AuthResponse? response =
-        await _apiRepository.signUpWithEmail(login, password);
-    if (response != null) {
+    LoginInputDto inputDto = LoginInputDto(login: login, password: password);
+    ResultDto? response = await _apiManager.signUpWithEmail(inputDto);
+    if (response != null && response.ok) {
       _secureStorajeService.write(Constants.login, login);
       _secureStorajeService.write(Constants.password, password);
+      _secureStorajeService.write(Constants.token, response.token);
       _navigatorService.navigateToAndRemoveUntil(
         TapsScreen.route,
         (route) => false,
       );
     } else {
-      _toastService.showToast('Usuario o contraseña erroneo', ToastType.error);
-    }
-  }
-
-  resetPassword() async {
-    String mail = await _dialogService.stringDialog(
-      'Recuperar contraseña',
-      'Escriba el mail donde podrá recuperar la contraseña.',
-      'Email...',
-      'Listo',
-      'Volver',
-    );
-    if (mail.isNotEmpty) {
-      bool? result = await _apiRepository.resetPassword(mail);
-      if (result != null && result) {
-        _toastService.showToast('Enviado correctamente', ToastType.success);
-      } else {
-        _toastService.showToast('Error en el envío', ToastType.error);
-      }
+      _toastService.showToast(
+          response!.message ?? 'Compruebe sus credenciales', ToastType.error);
     }
   }
 

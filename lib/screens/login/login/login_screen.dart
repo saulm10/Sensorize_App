@@ -127,15 +127,6 @@ class LoginCard extends StatelessWidget {
               ),
             ),
           ),
-
-          //Btn > recuperar contraseña
-          TextButton(
-            onPressed: () => loginProvider.resetPassword(),
-            child: const Text(
-              'Recuperar contraseña',
-              style: TextStyle(decoration: TextDecoration.underline),
-            ),
-          )
         ],
       ),
     );

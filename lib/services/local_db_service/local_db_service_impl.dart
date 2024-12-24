@@ -20,8 +20,8 @@ class LocalDbServiceImpl implements LocalDbService {
       final dir = await getApplicationDocumentsDirectory();
       return await Isar.open(
         [
+          FarmSchema,
           SilosSchema,
-          CentrosSchema,
           NotificationsSchema,
         ],
         inspector: kDebugMode,

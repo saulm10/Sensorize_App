@@ -23,11 +23,6 @@ class SecureStorajeServiceImpl implements SecureStorajeService {
   }
 
   @override
-  String readApiKey() {
-    return dotenv.env['API_KEY'] ?? '';
-  }
-
-  @override
   String readApiUrl() {
     return dotenv.env['API_URL'] ?? '';
   }
