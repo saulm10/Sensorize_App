@@ -70,7 +70,9 @@ class SiloDto {
         id: int.tryParse(json["id"]) ?? 0,
         siloName: json["siloName"],
         height: double.tryParse(json["height"]) ?? 0,
-        volume: int.tryParse(json["volume"]) ?? 0,
+        volume: (int.tryParse(json["volume"]) ?? 0) > 100
+            ? 100
+            : int.tryParse(json["volume"]) ?? 0,
         risk: int.tryParse(json["risk"]) ?? 0,
         sensor: SensorDto.fromJson(json["sensor"]),
       );

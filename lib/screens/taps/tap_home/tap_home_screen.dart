@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sensorize/extensions/build_context_ex.dart';
+import 'package:sensorize/extensions/string_ex.dart';
 import 'package:sensorize/widgets/silo_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -109,7 +110,7 @@ class _TapHomeContent extends StatelessWidget {
                   width: 270,
                   nivel: snapshot.data![index].volumen.toDouble(),
                   warningLevel: snapshot.data![index].risk.toDouble(),
-                  color: Colors.yellow,
+                  color: snapshot.data![index].color.toColor(),
                 ),
               );
             },

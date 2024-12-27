@@ -4,12 +4,12 @@ import 'package:sensorize/api/endpoint/sinc_endpoint.dart';
 import 'package:sensorize/services/services.dart';
 
 import 'endpoint/auth_endpoint.dart';
-import 'endpoint/mediciones_endpoint.dart';
+import 'endpoint/measures_endpoint.dart';
 import 'endpoint/silos_endpoint.dart';
 
 @singleton
 class ApiManagerImpl
-    with AuthEndpoint, MedicionesEndpoint, SilosEndpoint, SincEndpoint
+    with AuthEndpoint, MeasuresEndpoint, SilosEndpoint, SincEndpoint
     implements ApiManager {
   final HttpsService _httpsService;
   final SecureStorajeService _storage;

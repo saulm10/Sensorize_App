@@ -4,4 +4,6 @@ abstract class DialogService {
 
   Future<String> stringDialog(String title, String body, String hintText,
       String okText, String noOkText);
+
+  Future<String?> colorDialog();
 }

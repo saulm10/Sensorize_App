@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sensorize/extensions/build_context_ex.dart';
+import 'package:sensorize/extensions/string_ex.dart';
 import 'package:sensorize/widgets/silo_widget.dart';
 
 import 'tap_silos_provider.dart';
@@ -45,57 +46,82 @@ class _TapSilosScreen extends StatelessWidget {
           ),
           delegate: SliverChildBuilderDelegate(
             (context, index) {
-              return Container(
-                margin: const EdgeInsets.all(5),
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: context.theme.colorScheme.tertiary,
-                  borderRadius: BorderRadius.circular(35),
-                ),
-                alignment: Alignment.center,
-                child: Column(
-                  children: [
-                    Text(
-                      provider.silos[index].siloName,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0,
-                        height: 0,
-                      ),
-                    ),
-                    const Text('Contenido silo'),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Silowidget(
-                          height: 100,
-                          width: 75,
-                          nivel: provider.silos[index].volumen.toDouble(),
-                          warningLevel: provider.silos[index].risk.toDouble(),
-                          color: Colors.yellow,
-                        ),
-                        TweenAnimationBuilder(
-                          tween: Tween<double>(
-                            begin: 0,
-                            end: provider.silos[index].volumen.toDouble(),
+              return GestureDetector(
+                onTap: () => provider.navigateToSiloDetail(index),
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: context.theme.colorScheme.tertiary,
+                    borderRadius: BorderRadius.circular(35),
+                  ),
+                  alignment: Alignment.center,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: FittedBox(
+                          child: Text(
+                            provider.silos[index].siloName,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0,
+                              height: 0,
+                            ),
                           ),
-                          duration: const Duration(milliseconds: 270),
-                          builder: (context, value, child) {
-                            return Text(
-                              value.toStringAsFixed(0),
-                              style: const TextStyle(
-                                fontSize: 60,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: -5,
-                                height: 0,
-                              ),
-                            );
-                          },
                         ),
-                      ],
-                    )
-                  ],
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: FittedBox(
+                                child: Hero(
+                                  tag: provider.silos[index].id,
+                                  child: Silowidget(
+                                    height: 100,
+                                    width: 75,
+                                    nivel: provider.silos[index].volumen
+                                        .toDouble(),
+                                    warningLevel:
+                                        provider.silos[index].risk.toDouble(),
+                                    color:
+                                        provider.silos[index].color.toColor(),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: FittedBox(
+                                child: TweenAnimationBuilder(
+                                  tween: Tween<double>(
+                                    begin: 0,
+                                    end: provider.silos[index].volumen
+                                        .toDouble(),
+                                  ),
+                                  duration: const Duration(milliseconds: 270),
+                                  builder: (context, value, child) {
+                                    return Text(
+                                      value.toStringAsFixed(0),
+                                      style: const TextStyle(
+                                        fontSize: 60,
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: -5,
+                                        height: 0,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               );
             },

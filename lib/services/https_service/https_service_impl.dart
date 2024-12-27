@@ -16,10 +16,11 @@ class HttpsServiceImpl implements HttpsService {
   }
 
   @override
-  Future<ResultDto> get(
+  Future<dynamic> get(
     String endpoint, {
     Map<String, String>? headers,
     Map<String, String>? queryParameters,
+    dynamic Function(String)? customDeserializer,
   }) async {
     final uri = _buildUri(endpoint, queryParameters);
     try {
@@ -28,8 +29,13 @@ class HttpsServiceImpl implements HttpsService {
         if (headers != null) ...headers
       };
       final response = await http.get(uri, headers: mergedHeaders);
+
       if (response.statusCode == 200) {
-        return resultDtoFromJson(response.body);
+        if (customDeserializer != null) {
+          return customDeserializer(response.body);
+        } else {
+          return resultDtoFromJson(response.body);
+        }
       } else {
         throw Exception('Error al obtener datos: ${response.statusCode}');
       }
@@ -39,11 +45,12 @@ class HttpsServiceImpl implements HttpsService {
   }
 
   @override
-  Future<ResultDto> post(
+  Future<dynamic> post(
     String endpoint,
     Map<String, dynamic> data, {
     Map<String, String>? headers,
     Map<String, String>? queryParameters,
+    dynamic Function(String)? customDeserializer,
   }) async {
     final uri = _buildUri(endpoint, queryParameters);
     try {
@@ -56,8 +63,13 @@ class HttpsServiceImpl implements HttpsService {
         headers: mergedHeaders,
         body: jsonEncode(data),
       );
+
       if (response.statusCode == 201 || response.statusCode == 200) {
-        return resultDtoFromJson(response.body);
+        if (customDeserializer != null) {
+          return customDeserializer(response.body);
+        } else {
+          return resultDtoFromJson(response.body);
+        }
       } else {
         throw Exception('Error al enviar datos: ${response.statusCode}');
       }
@@ -67,11 +79,46 @@ class HttpsServiceImpl implements HttpsService {
   }
 
   @override
-  Future<ResultDto> put(
+  Future<dynamic> patch(
     String endpoint,
     Map<String, dynamic> data, {
     Map<String, String>? headers,
     Map<String, String>? queryParameters,
+    dynamic Function(String)? customDeserializer,
+  }) async {
+    final uri = _buildUri(endpoint, queryParameters);
+    try {
+      final mergedHeaders = {
+        ...await _buildHeaders(),
+        if (headers != null) ...headers
+      };
+      final response = await http.patch(
+        uri,
+        headers: mergedHeaders,
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        if (customDeserializer != null) {
+          return customDeserializer(response.body);
+        } else {
+          return resultDtoFromJson(response.body);
+        }
+      } else {
+        throw Exception('Error al enviar datos: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error en PATCH: $e');
+    }
+  }
+
+  @override
+  Future<dynamic> put(
+    String endpoint,
+    Map<String, dynamic> data, {
+    Map<String, String>? headers,
+    Map<String, String>? queryParameters,
+    dynamic Function(String)? customDeserializer,
   }) async {
     final uri = _buildUri(endpoint, queryParameters);
     try {
@@ -84,8 +131,13 @@ class HttpsServiceImpl implements HttpsService {
         headers: mergedHeaders,
         body: jsonEncode(data),
       );
+
       if (response.statusCode == 200) {
-        return resultDtoFromJson(response.body);
+        if (customDeserializer != null) {
+          return customDeserializer(response.body);
+        } else {
+          return resultDtoFromJson(response.body);
+        }
       } else {
         throw Exception('Error al actualizar datos: ${response.statusCode}');
       }

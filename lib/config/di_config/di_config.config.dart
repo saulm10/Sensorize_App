@@ -10,17 +10,17 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
-import 'package:sensorize/api/api_manager_impl.dart' as _i18;
+import 'package:sensorize/api/api_manager_impl.dart' as _i16;
 import 'package:sensorize/config/globals.dart' as _i3;
-import 'package:sensorize/database/aa_tables.dart' as _i17;
+import 'package:sensorize/database/aa_tables.dart' as _i20;
 import 'package:sensorize/screens/login/check_auth/check_auth_provider.dart'
-    as _i19;
-import 'package:sensorize/screens/login/login/login_provider.dart' as _i20;
+    as _i17;
+import 'package:sensorize/screens/login/login/login_provider.dart' as _i18;
 import 'package:sensorize/screens/notifications/notifications_provider.dart'
     as _i15;
 import 'package:sensorize/screens/profile/profile_provider.dart' as _i23;
 import 'package:sensorize/screens/silo_detail/silo_detail_provider.dart'
-    as _i16;
+    as _i19;
 import 'package:sensorize/screens/taps/tap_home/tap_home_provider.dart' as _i9;
 import 'package:sensorize/screens/taps/tap_silos/tap_silos_provider.dart'
     as _i10;
@@ -63,8 +63,10 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i6.LocalDbService>(),
           gh<_i6.NavigatorService>(),
         ));
-    gh.factory<_i10.TapSilosProvider>(
-        () => _i10.TapSilosProvider(gh<_i6.LocalDbService>()));
+    gh.factory<_i10.TapSilosProvider>(() => _i10.TapSilosProvider(
+          gh<_i6.LocalDbService>(),
+          gh<_i6.NavigatorService>(),
+        ));
     gh.singleton<_i11.ToastService>(() => _i12.ToastServiceImpl());
     gh.singleton<_i6.DialogService>(
         () => _i13.DialogServiceImpl(gh<_i6.NavigatorService>()));
@@ -74,32 +76,34 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i6.LocalDbService>(),
           gh<_i6.DialogService>(),
         ));
-    gh.factoryParam<_i16.SiloDetailProvider, _i17.Silos, dynamic>((
-      silo,
-      _,
-    ) =>
-        _i16.SiloDetailProvider(
-          silo,
-          gh<_i6.LocalDbService>(),
-          gh<_i6.DialogService>(),
-        ));
-    gh.singleton<_i18.ApiManagerImpl>(() => _i18.ApiManagerImpl(
+    gh.singleton<_i16.ApiManagerImpl>(() => _i16.ApiManagerImpl(
           gh<_i6.HttpsService>(),
           gh<_i6.SecureStorajeService>(),
         ));
-    gh.factory<_i19.CheckAuthProvider>(() => _i19.CheckAuthProvider(
-          gh<_i18.ApiManagerImpl>(),
+    gh.factory<_i17.CheckAuthProvider>(() => _i17.CheckAuthProvider(
+          gh<_i16.ApiManagerImpl>(),
           gh<_i6.NavigatorService>(),
           gh<_i6.SecureStorajeService>(),
         ));
-    gh.factory<_i20.LoginProvider>(() => _i20.LoginProvider(
-          gh<_i18.ApiManagerImpl>(),
+    gh.factory<_i18.LoginProvider>(() => _i18.LoginProvider(
+          gh<_i16.ApiManagerImpl>(),
           gh<_i6.NavigatorService>(),
           gh<_i6.SecureStorajeService>(),
           gh<_i6.ToastService>(),
         ));
+    gh.factoryParam<_i19.SiloDetailProvider, _i20.Silos, dynamic>((
+      silo,
+      _,
+    ) =>
+        _i19.SiloDetailProvider(
+          silo,
+          gh<_i6.LocalDbService>(),
+          gh<_i6.DialogService>(),
+          gh<_i16.ApiManagerImpl>(),
+          gh<_i6.ToastService>(),
+        ));
     gh.singleton<_i21.SincService>(() => _i21.SincService(
-          gh<_i18.ApiManagerImpl>(),
+          gh<_i16.ApiManagerImpl>(),
           gh<_i6.LocalDbService>(),
           gh<_i6.SecureStorajeService>(),
         ));

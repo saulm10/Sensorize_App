@@ -16,40 +16,59 @@ class DialogServiceImpl implements DialogService {
       context: _navigatorService.getCurrentContext(),
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(body),
+        title: Text(
+          title,
+          style: const TextStyle(fontSize: 40, fontWeight: FontWeight.w500),
+        ),
+        content: Text(
+          body,
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        ),
         actions: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: context.theme.colorScheme.primary,
-              minimumSize: const Size(40, 55),
-            ),
-            onPressed: () {
-              _navigatorService.goBack(resultado: true);
-            },
-            child: Text(
-              okText,
-              style: TextStyle(
-                fontSize: 20,
-                color: context.theme.colorScheme.onPrimary,
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: context.theme.colorScheme.primary,
+                    minimumSize: const Size(40, 50),
+                  ),
+                  onPressed: () {
+                    _navigatorService.goBack(resultado: true);
+                  },
+                  child: FittedBox(
+                    child: Text(
+                      okText,
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: context.theme.colorScheme.onPrimary,
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.transparent,
-              minimumSize: const Size(40, 55),
-            ),
-            onPressed: () {
-              _navigatorService.goBack(resultado: false);
-            },
-            child: Text(
-              noOkText,
-              style: TextStyle(
-                fontSize: 20,
-                color: context.theme.colorScheme.onPrimary,
+              const SizedBox(width: 8),
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    minimumSize: const Size(40, 50),
+                  ),
+                  onPressed: () {
+                    _navigatorService.goBack(resultado: false);
+                  },
+                  child: FittedBox(
+                    child: Text(
+                      noOkText,
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: context.theme.colorScheme.onPrimary,
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ],
       ),
@@ -119,6 +138,77 @@ class DialogServiceImpl implements DialogService {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  @override
+  Future<String?> colorDialog() async {
+    return await showDialog(
+      context: _navigatorService.getCurrentContext(),
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'Selecciona un color',
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          height: 200,
+          child: GridView.count(
+            crossAxisCount: 3,
+            crossAxisSpacing: 0,
+            mainAxisSpacing: 0,
+            shrinkWrap: true,
+            children: [
+              _colorTile(context, const Color(0xFFFFCC00)),
+              _colorTile(context, const Color(0xFFC19A6B)),
+              _colorTile(context, const Color(0xFF90B060)),
+              _colorTile(context, const Color(0xFFD3D3D3)),
+              _colorTile(context, const Color(0xFFFFA04C)),
+              _colorTile(context, const Color(0xFF79553A)),
+            ],
+          ),
+        ),
+        actions: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              minimumSize: const Size(40, 50),
+            ),
+            onPressed: () {
+              _navigatorService.goBack();
+            },
+            child: FittedBox(
+              child: Text(
+                'Cancelar',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: context.theme.colorScheme.onPrimary,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _colorTile(
+    BuildContext context,
+    Color color,
+  ) {
+    return GestureDetector(
+      onTap: () => _navigatorService.goBack(
+          resultado: '${color.red},${color.green},${color.blue}'),
+      child: Container(
+        margin: const EdgeInsets.all(2),
+        width: 20,
+        height: 20,
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+        ),
       ),
     );
   }

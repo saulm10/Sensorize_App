@@ -35,9 +35,10 @@ class LoginProvider extends ChangeNotifier {
     LoginInputDto inputDto = LoginInputDto(login: login, password: password);
     ResultDto? response = await _apiManager.signUpWithEmail(inputDto);
     if (response != null && response.ok) {
+      LoginDto loginDto = loginDtoFromJson(response.data!);
       _secureStorajeService.write(Constants.login, login);
       _secureStorajeService.write(Constants.password, password);
-      _secureStorajeService.write(Constants.token, response.token);
+      _secureStorajeService.write(Constants.token, loginDto.token);
       _navigatorService.navigateToAndRemoveUntil(
         TapsScreen.route,
         (route) => false,

@@ -22,7 +22,8 @@ class CheckAuthProvider extends ChangeNotifier {
   Future<bool> loginAuth() async {
     ResultDto? response = await _apiManager.signUpAuto();
     if (response != null && response.ok) {
-      await _secureStorajeService.write(Constants.token, response.token);
+      LoginDto loginDto = loginDtoFromJson(response.data!);
+      await _secureStorajeService.write(Constants.token, loginDto.token);
       _navigatorService.navigateToAndRemoveUntil(
         TapsScreen.route,
         (route) => false,

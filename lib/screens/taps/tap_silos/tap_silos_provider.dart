@@ -4,19 +4,22 @@ import 'package:sensorize/config/di_config/di_config.dart';
 
 import '../../../database/aa_tables.dart';
 import '../../../services/services.dart';
+import '../../screens.dart';
 
 @Injectable()
 class TapSilosProvider extends ChangeNotifier {
   final LocalDbService _localDbService;
+  final NavigatorService _navigatorService;
 
   final List<Silos> silos = [];
   Filtrado filterstate = Filtrado.alfabetico;
 
-  TapSilosProvider(this._localDbService) {
+  TapSilosProvider(this._localDbService, this._navigatorService) {
     getSilos();
   }
 
   getSilos() async {
+    silos.clear();
     silos.addAll(await _localDbService.getAll<Silos>());
     notifyListeners();
   }
@@ -36,6 +39,12 @@ class TapSilosProvider extends ChangeNotifier {
         filterstate = Filtrado.alfabetico;
     }
     notifyListeners();
+  }
+
+  navigateToSiloDetail(int index) async {
+    await _navigatorService.navigateToWithArgs(
+        SiloDetailScreen.route, silos[index]);
+    getSilos();
   }
 
   static TapSilosProvider get() {

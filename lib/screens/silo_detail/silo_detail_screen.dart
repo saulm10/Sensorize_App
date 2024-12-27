@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sensorize/extensions/build_context_ex.dart';
+import 'package:sensorize/extensions/string_ex.dart';
 import 'package:sensorize/screens/silo_detail/widgets/detail_background.dart';
 import 'package:sensorize/widgets/silo_widget.dart';
 
@@ -51,30 +52,32 @@ class _SiloDetailScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       //Nivel
-                      TweenAnimationBuilder(
-                        tween: Tween<double>(
-                          begin: 0,
-                          end: provider.silo.volumen.toDouble(),
+                      FittedBox(
+                        child: TweenAnimationBuilder(
+                          tween: Tween<double>(
+                            begin: 0,
+                            end: provider.silo.volumen.toDouble(),
+                          ),
+                          duration: const Duration(milliseconds: 270),
+                          builder: (context, value, child) {
+                            return Text(
+                              value.toStringAsFixed(0),
+                              style: const TextStyle(
+                                fontSize: 115,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: -5,
+                                height: 0.9,
+                              ),
+                            );
+                          },
                         ),
-                        duration: const Duration(milliseconds: 270),
-                        builder: (context, value, child) {
-                          return Text(
-                            value.toStringAsFixed(0),
-                            style: const TextStyle(
-                              fontSize: 115,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -5,
-                              height: 0.9,
-                            ),
-                          );
-                        },
                       ),
 
                       //Botones verticales
                       Expanded(
                         child: Container(
                           height: 300,
-                          margin: const EdgeInsets.only(bottom: 10),
+                          margin: const EdgeInsets.all(40),
                           child: Column(
                             children: [
                               Expanded(
@@ -118,30 +121,6 @@ class _SiloDetailScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  width: 3,
-                                  color: context.theme.colorScheme.primary,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: FittedBox(
-                                  child: Column(
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: const Icon(
-                                          Icons.notifications,
-                                          size: 40,
-                                        ),
-                                      ),
-                                      const Text('Notificaciones')
-                                    ],
-                                  ),
-                                ),
-                              ),
                             ],
                           ),
                         ),
@@ -163,7 +142,7 @@ class _SiloDetailScreen extends StatelessWidget {
                             width: 210,
                             nivel: provider.silo.volumen.toDouble(),
                             warningLevel: provider.silo.risk.toDouble(),
-                            color: Colors.yellow,
+                            color: provider.silo.color.toColor(),
                           ),
                         ),
                       ),
@@ -178,7 +157,7 @@ class _SiloDetailScreen extends StatelessWidget {
           Expanded(
             flex: 21,
             child: DefaultTabController(
-              length: 3,
+              length: 4,
               child: Column(
                 children: [
                   Expanded(
@@ -195,11 +174,15 @@ class _SiloDetailScreen extends StatelessWidget {
                           ),
                           _TabTitle(
                             icon: Icons.wifi,
-                            title: 'Pesadas',
+                            title: 'Mediciones',
                           ),
                           _TabTitle(
                             icon: Icons.local_shipping,
                             title: 'Pedidos',
+                          ),
+                          _TabTitle(
+                            icon: Icons.notifications,
+                            title: 'Notificaciones',
                           ),
                         ],
                       ),
@@ -209,11 +192,10 @@ class _SiloDetailScreen extends StatelessWidget {
                     flex: 10,
                     child: TabBarView(
                       children: [
-                        _TabCard(
-                          Tab1(),
-                        ),
-                        _TabCard(Text('Prueba 2')),
+                        _TabCard(Tab1()),
+                        _TabCard(Tab2()),
                         _TabCard(Text('Prueba 3')),
+                        _TabCard(Text('Prueba 4')),
                       ],
                     ),
                   )
@@ -260,10 +242,10 @@ class Tab1 extends StatelessWidget {
                 fontWeight: FontWeight.normal,
               ),
             ),
-            trailing: IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.edit),
-            ),
+            // trailing: IconButton(
+            //   onPressed: () {},
+            //   icon: const Icon(Icons.edit),
+            // ),
           ),
         ),
 
@@ -282,8 +264,11 @@ class Tab1 extends StatelessWidget {
               ),
             ),
             subtitle: Slider(
-              value: 0.3,
-              onChanged: (value) {},
+              value: provider.silo.risk.toDouble() / 100,
+              onChangeEnd: (value) => provider.onRiskChange(value),
+              onChanged: (double value) {
+                provider.riskChange(value);
+              },
             ),
             trailing: Text(
               '${provider.silo.risk}%',
@@ -317,8 +302,12 @@ class Tab1 extends StatelessWidget {
               ),
             ),
             trailing: IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.edit),
+              onPressed: () => provider.onColorTap(),
+              icon: const Icon(
+                Icons.circle,
+                size: 35,
+              ),
+              color: provider.silo.color.toColor(),
             ),
           ),
         ),
@@ -346,11 +335,72 @@ class Tab1 extends StatelessWidget {
             ),
             trailing: IconButton(
               onPressed: () {},
-              icon: const Icon(Icons.refresh_rounded),
+              icon: const Icon(
+                Icons.refresh_rounded,
+                size: 30,
+              ),
             ),
           ),
         ),
       ],
+    );
+  }
+}
+
+class Tab2 extends StatelessWidget {
+  const Tab2({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    SiloDetailProvider provider = context.watch<SiloDetailProvider>();
+
+    return DataTable(
+      columnSpacing: 0,
+      headingRowHeight: 40,
+      dividerThickness: 0,
+      headingTextStyle: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+      dataRowMaxHeight: 30,
+      dataRowMinHeight: 20,
+      dataTextStyle: const TextStyle(
+        fontSize: 18,
+      ),
+      columns: const [
+        DataColumn(
+          label: Text('Medición'),
+        ),
+        DataColumn(
+          label: Text('Fecha'),
+        ),
+        DataColumn(
+          label: Text('Llenado'),
+          numeric: true,
+        ),
+      ],
+      rows: provider.silo.measures.map((measure) {
+        return DataRow(
+          color: ((measure.id % 2) == 0)
+              ? WidgetStateProperty.all<Color?>(
+                  context.theme.colorScheme.tertiary,
+                )
+              : WidgetStateProperty.all<Color?>(
+                  context.theme.colorScheme.tertiary,
+                ),
+          cells: [
+            DataCell(Text(measure.result.toStringAsFixed(2))),
+            DataCell(Text(
+                '${measure.date.day}/${measure.date.month}/${measure.date.year}')),
+            DataCell(
+              Icon(
+                measure.fullFilled ? Icons.check_circle : Icons.cancel,
+                color: measure.fullFilled ? Colors.green : Colors.red,
+              ),
+            ),
+          ],
+        );
+      }).toList(),
     );
   }
 }
