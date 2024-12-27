@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:injectable/injectable.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:sensorize/config/constants.dart';
 import 'package:sensorize/models/model.dart';
 import 'package:sensorize/services/services.dart';
@@ -9,9 +10,13 @@ import 'package:http/http.dart' as http;
 @Singleton(as: HttpsService)
 class HttpsServiceImpl implements HttpsService {
   final SecureStorajeService _secureStorajeService;
+  final ToastService _toastService;
   late String baseUrl;
 
-  HttpsServiceImpl(this._secureStorajeService) {
+  HttpsServiceImpl(
+    this._secureStorajeService,
+    this._toastService,
+  ) {
     baseUrl = _secureStorajeService.readApiUrl();
   }
 
@@ -36,6 +41,8 @@ class HttpsServiceImpl implements HttpsService {
         } else {
           return resultDtoFromJson(response.body);
         }
+      } else if (response.statusCode == 401) {
+        _refreshToken();
       } else {
         throw Exception('Error al obtener datos: ${response.statusCode}');
       }
@@ -70,6 +77,8 @@ class HttpsServiceImpl implements HttpsService {
         } else {
           return resultDtoFromJson(response.body);
         }
+      } else if (response.statusCode == 401) {
+        _refreshToken();
       } else {
         throw Exception('Error al enviar datos: ${response.statusCode}');
       }
@@ -101,6 +110,8 @@ class HttpsServiceImpl implements HttpsService {
       if (response.statusCode == 201 || response.statusCode == 200) {
         if (customDeserializer != null) {
           return customDeserializer(response.body);
+        } else if (response.statusCode == 401) {
+          _refreshToken();
         } else {
           return resultDtoFromJson(response.body);
         }
@@ -138,6 +149,8 @@ class HttpsServiceImpl implements HttpsService {
         } else {
           return resultDtoFromJson(response.body);
         }
+      } else if (response.statusCode == 401) {
+        _refreshToken();
       } else {
         throw Exception('Error al actualizar datos: ${response.statusCode}');
       }
@@ -155,6 +168,14 @@ class HttpsServiceImpl implements HttpsService {
       headers['Authorization'] = 'Bearer $token';
     }
     return headers;
+  }
+
+  _refreshToken() {
+    _toastService.showToast('Sesión caducada', ToastType.alert);
+    Restart.restartApp(
+      notificationTitle: 'Restarting App',
+      notificationBody: 'Please tap here to open the app again.',
+    );
   }
 
   /// Método para construir la URI con parámetros de consulta

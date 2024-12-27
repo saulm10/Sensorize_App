@@ -12,19 +12,19 @@ import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 import 'package:sensorize/api/api_manager_impl.dart' as _i16;
 import 'package:sensorize/config/globals.dart' as _i3;
-import 'package:sensorize/database/aa_tables.dart' as _i20;
+import 'package:sensorize/database/aa_tables.dart' as _i23;
 import 'package:sensorize/screens/login/check_auth/check_auth_provider.dart'
     as _i17;
 import 'package:sensorize/screens/login/login/login_provider.dart' as _i18;
 import 'package:sensorize/screens/notifications/notifications_provider.dart'
     as _i15;
-import 'package:sensorize/screens/profile/profile_provider.dart' as _i23;
+import 'package:sensorize/screens/profile/profile_provider.dart' as _i21;
 import 'package:sensorize/screens/silo_detail/silo_detail_provider.dart'
-    as _i19;
+    as _i22;
 import 'package:sensorize/screens/taps/tap_home/tap_home_provider.dart' as _i9;
 import 'package:sensorize/screens/taps/tap_silos/tap_silos_provider.dart'
     as _i10;
-import 'package:sensorize/screens/taps/taps_provider.dart' as _i22;
+import 'package:sensorize/screens/taps/taps_provider.dart' as _i20;
 import 'package:sensorize/services/diolog_service/dialog_service_impl.dart'
     as _i13;
 import 'package:sensorize/services/https_service/https_service_impl.dart'
@@ -38,7 +38,7 @@ import 'package:sensorize/services/navigator_service/navigator_service_impl.dart
 import 'package:sensorize/services/secure_storaje_service/secure_storaje_service_impl.dart'
     as _i8;
 import 'package:sensorize/services/services.dart' as _i6;
-import 'package:sensorize/services/sinc_service.dart' as _i21;
+import 'package:sensorize/services/sinc_service.dart' as _i19;
 import 'package:sensorize/services/toast_service/toast_service.dart' as _i11;
 import 'package:sensorize/services/toast_service/toast_service_impl.dart'
     as _i12;
@@ -70,8 +70,10 @@ extension GetItInjectableX on _i1.GetIt {
     gh.singleton<_i11.ToastService>(() => _i12.ToastServiceImpl());
     gh.singleton<_i6.DialogService>(
         () => _i13.DialogServiceImpl(gh<_i6.NavigatorService>()));
-    gh.singleton<_i6.HttpsService>(
-        () => _i14.HttpsServiceImpl(gh<_i6.SecureStorajeService>()));
+    gh.singleton<_i6.HttpsService>(() => _i14.HttpsServiceImpl(
+          gh<_i6.SecureStorajeService>(),
+          gh<_i6.ToastService>(),
+        ));
     gh.factory<_i15.NotificationsProvider>(() => _i15.NotificationsProvider(
           gh<_i6.LocalDbService>(),
           gh<_i6.DialogService>(),
@@ -91,33 +93,35 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i6.SecureStorajeService>(),
           gh<_i6.ToastService>(),
         ));
-    gh.factoryParam<_i19.SiloDetailProvider, _i20.Silos, dynamic>((
+    gh.singleton<_i19.SincService>(() => _i19.SincService(
+          gh<_i16.ApiManagerImpl>(),
+          gh<_i6.LocalDbService>(),
+          gh<_i6.SecureStorajeService>(),
+        ));
+    gh.factory<_i20.TapsProvider>(() => _i20.TapsProvider(
+          gh<_i6.SincService>(),
+          gh<_i6.LocalDbService>(),
+          gh<_i6.NavigatorService>(),
+        ));
+    gh.factory<_i21.ProfileProvider>(() => _i21.ProfileProvider(
+          gh<_i6.NavigatorService>(),
+          gh<_i6.DialogService>(),
+          gh<_i6.SecureStorajeService>(),
+          gh<_i6.LocalDbService>(),
+          gh<_i6.SincService>(),
+        ));
+    gh.factoryParam<_i22.SiloDetailProvider, _i23.Silos, dynamic>((
       silo,
       _,
     ) =>
-        _i19.SiloDetailProvider(
+        _i22.SiloDetailProvider(
           silo,
           gh<_i6.LocalDbService>(),
           gh<_i6.DialogService>(),
           gh<_i16.ApiManagerImpl>(),
           gh<_i6.ToastService>(),
-        ));
-    gh.singleton<_i21.SincService>(() => _i21.SincService(
-          gh<_i16.ApiManagerImpl>(),
-          gh<_i6.LocalDbService>(),
-          gh<_i6.SecureStorajeService>(),
-        ));
-    gh.factory<_i22.TapsProvider>(() => _i22.TapsProvider(
           gh<_i6.SincService>(),
-          gh<_i6.LocalDbService>(),
           gh<_i6.NavigatorService>(),
-        ));
-    gh.factory<_i23.ProfileProvider>(() => _i23.ProfileProvider(
-          gh<_i6.NavigatorService>(),
-          gh<_i6.DialogService>(),
-          gh<_i6.SecureStorajeService>(),
-          gh<_i6.LocalDbService>(),
-          gh<_i6.SincService>(),
         ));
     return this;
   }

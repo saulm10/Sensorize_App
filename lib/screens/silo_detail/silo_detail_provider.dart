@@ -12,8 +12,12 @@ class SiloDetailProvider extends ChangeNotifier {
   final DialogService _dialogService;
   final ApiManagerImpl _apiManagerImpl;
   final ToastService _toastService;
+  final SincService _sincService;
+  final NavigatorService _navigatorService;
+
   Silos silo;
   late int initialRisk;
+  bool loading = false;
 
   SiloDetailProvider(
     @factoryParam this.silo,
@@ -21,8 +25,26 @@ class SiloDetailProvider extends ChangeNotifier {
     this._dialogService,
     this._apiManagerImpl,
     this._toastService,
+    this._sincService,
+    this._navigatorService,
   ) {
     initialRisk = silo.risk;
+  }
+
+  updateMeasures() async {
+    loading = true;
+    notifyListeners();
+    await _sincService.localSinc();
+    Silos? siloAux = await _localDbService.getById<Silos>(silo.id);
+    if (siloAux != null) {
+      silo = siloAux;
+      _toastService.showToast('Actualizado', ToastType.success);
+    } else {
+      //Sino encuentra el silo, te devuelve a la pantalla de home
+      _navigatorService.goBack();
+    }
+    loading = false;
+    notifyListeners();
   }
 
   riskChange(double value) {

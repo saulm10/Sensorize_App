@@ -22,18 +22,18 @@ class SincService {
     ResultDto result = await _apiManager.sincData();
     if (result.ok) {
       SincDto sinc = sincDtoFromJson(result.data!);
-      await sincLiveStock(sinc);
-      await sincSilos(sinc);
+      await _sincLiveStock(sinc);
+      await _sincSilos(sinc);
     }
   }
 
-  sincLiveStock(SincDto sinc) async {
+  _sincLiveStock(SincDto sinc) async {
     await _localDbService.deleteAll<Farm>();
     Farm newLivestock = Deserialize.farmFromLocalLiveStock(sinc.livestockDto);
     _localDbService.save<Farm>(newLivestock);
   }
 
-  sincSilos(SincDto sinc) async {
+  _sincSilos(SincDto sinc) async {
     // Obtén todos los silos existentes de la base de datos local
     final existingSilos = await _localDbService.getAll<Silos>();
     final Map<int, Silos> siloMap = {
@@ -48,10 +48,10 @@ class SincService {
         existingSilo.risk = newSilo.risk;
         existingSilo.volumen = newSilo.volumen;
         existingSilo.height = newSilo.height;
-        existingSilo.measures = await sincMeasuresSilo(existingSilo.id);
+        existingSilo.measures = await _sincMeasuresSilo(existingSilo.id);
         updatedSilos.add(existingSilo);
       } else {
-        newSilo.measures = await sincMeasuresSilo(newSilo.id);
+        newSilo.measures = await _sincMeasuresSilo(newSilo.id);
         updatedSilos.add(newSilo);
       }
     }
@@ -60,7 +60,7 @@ class SincService {
     await _localDbService.saveAll<Silos>(updatedSilos);
   }
 
-  Future<List<Measures>> sincMeasuresSilo(int idSilo) async {
+  Future<List<Measures>> _sincMeasuresSilo(int idSilo) async {
     List<Measures> measures = [];
     ResultDto resultDto = await _apiManager.getMeasuresSilo(idSilo);
     if (resultDto.ok) {

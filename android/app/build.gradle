@@ -23,7 +23,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.example.sensorize"
+    namespace "com.s&d.sensorize"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 

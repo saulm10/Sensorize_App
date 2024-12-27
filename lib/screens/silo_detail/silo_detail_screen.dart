@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sensorize/extensions/build_context_ex.dart';
 import 'package:sensorize/extensions/string_ex.dart';
 import 'package:sensorize/screens/silo_detail/widgets/detail_background.dart';
+import 'package:sensorize/widgets/rotating_icon_widget.dart';
 import 'package:sensorize/widgets/silo_widget.dart';
 
 import '../../database/aa_tables.dart';
@@ -110,9 +111,11 @@ class _SiloDetailScreen extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       IconButton(
-                                        onPressed: () {},
-                                        icon: const Icon(
-                                          Icons.refresh,
+                                        onPressed: () =>
+                                            provider.updateMeasures(),
+                                        icon: RotatingIcon(
+                                          icon: Icons.refresh,
+                                          isRotating: provider.loading,
                                           size: 40,
                                         ),
                                       ),
@@ -327,17 +330,23 @@ class Tab1 extends StatelessWidget {
               ),
             ),
             subtitle: Text(
-              provider.silo.siloName,
+              provider.silo.measures.isNotEmpty
+                  ? provider.silo.measures
+                      .reduce((a, b) => a.date.isAfter(b.date) ? a : b)
+                      .date
+                      .toString()
+                  : 'N/D',
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
               ),
             ),
             trailing: IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.refresh_rounded,
-                size: 30,
+              onPressed: () => provider.updateMeasures(),
+              icon: RotatingIcon(
+                icon: Icons.refresh,
+                isRotating: provider.loading,
+                size: 40,
               ),
             ),
           ),
