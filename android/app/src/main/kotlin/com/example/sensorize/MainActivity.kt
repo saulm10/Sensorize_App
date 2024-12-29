@@ -1,4 +1,4 @@
-package com.example.sensorize
+package com.sd.sensorize
 
 import io.flutter.embedding.android.FlutterActivity
 
