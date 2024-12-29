@@ -163,11 +163,16 @@ class _TapHomeContent extends StatelessWidget {
               return Text(
                 value.toStringAsFixed(0),
                 style: const TextStyle(
-                  fontSize: 105,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -5,
-                  height: 0,
-                ),
+                    fontSize: 100,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -5,
+                    height: 0,
+                    shadows: [
+                      Shadow(
+                          color: Colors.black45,
+                          blurRadius: 10,
+                          offset: Offset(1, 1))
+                    ]),
               );
             },
           ),
