@@ -10,10 +10,12 @@ mixin AuthEndpoint implements ApiManager {
   Future<ResultDto?> signUpAuto() async {
     String password = await storage.read(Constants.password);
     String login = await storage.read(Constants.login);
+    String fcmToken = await storage.read(Constants.fcmToken);
 
     LoginInputDto inputDto = LoginInputDto(
       login: login,
       password: password,
+      tokenApp: fcmToken,
     );
 
     if (login.isNotEmpty && password.isNotEmpty) {

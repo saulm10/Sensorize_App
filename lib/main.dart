@@ -1,17 +1,21 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sensorize/config/di_config/di_config.dart';
 import 'package:sensorize/config/env/env.dart';
 import 'package:sensorize/config/globals.dart';
 import 'package:sensorize/database/aa_tables.dart';
+import 'package:sensorize/firebase_options.dart';
 import 'package:sensorize/services/services.dart';
 
 import 'screens/screens.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await setupEnv();
   await setupDI();
+  Injector.F<FirebaseNotificationsService>().initialize();
   runApp(const SensorizeProvider());
 }
 

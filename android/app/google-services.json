@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "865797437620",
+    "project_id": "sensorize-7380b",
+    "storage_bucket": "sensorize-7380b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865797437620:android:c8e51a927068eb44617fe1",
+        "android_client_info": {
+          "package_name": "com.sd.sensorize"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtYss50zdUa4dMiYVbGC8-RImTmt9SnlQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

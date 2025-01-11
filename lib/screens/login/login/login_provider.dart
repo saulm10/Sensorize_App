@@ -14,7 +14,9 @@ class LoginProvider extends ChangeNotifier {
   final NavigatorService _navigatorService;
   final SecureStorajeService _secureStorajeService;
   final ToastService _toastService;
+  final FirebaseNotificationsService _notificationsService;
 
+  String fcmToken = '';
   String login = '';
   String password = '';
   bool isPasswordObscured = true;
@@ -24,7 +26,14 @@ class LoginProvider extends ChangeNotifier {
     this._navigatorService,
     this._secureStorajeService,
     this._toastService,
-  );
+    this._notificationsService,
+  ) {
+    getFcmToken();
+  }
+
+  void getFcmToken() async {
+    fcmToken = await _notificationsService.getToken() ?? '';
+  }
 
   void passwordVisibility() {
     isPasswordObscured = !isPasswordObscured;
@@ -32,13 +41,15 @@ class LoginProvider extends ChangeNotifier {
   }
 
   void onLoginTap() async {
-    LoginInputDto inputDto = LoginInputDto(login: login, password: password);
+    LoginInputDto inputDto =
+        LoginInputDto(login: login, password: password, tokenApp: fcmToken);
     ResultDto? response = await _apiManager.signUpWithEmail(inputDto);
     if (response != null && response.ok) {
       LoginDto loginDto = loginDtoFromJson(response.data!);
       _secureStorajeService.write(Constants.login, login);
       _secureStorajeService.write(Constants.password, password);
       _secureStorajeService.write(Constants.token, loginDto.token);
+      _secureStorajeService.write(Constants.fcmToken, fcmToken);
       _navigatorService.navigateToAndRemoveUntil(
         TapsScreen.route,
         (route) => false,

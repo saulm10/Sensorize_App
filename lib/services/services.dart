@@ -1,3 +1,5 @@
+export 'package:sensorize/services/firebase_notifications_service/firebase_notifications_service.dart';
+export 'package:sensorize/services/firebase_notifications_service/firebase_notifications_service_impl.dart';
 export 'package:sensorize/services/https_service/https_service.dart';
 export 'package:sensorize/services/https_service/https_service_impl.dart';
 export 'package:sensorize/services/diolog_service/dialog_service.dart';
